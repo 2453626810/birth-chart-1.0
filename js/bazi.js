@@ -535,6 +535,60 @@ function enhanceCurrentReading(result) {
   return cr;
 }
 
+// ========== 排盘表单输入持久化（记住上次输入，刷新后自动填充） ==========
+
+// localStorage 存储排盘输入的键名
+var BAZI_FORM_STORAGE = 'bazi_form_input';
+
+/**
+ * 保存排盘表单输入（出生日期、时辰、性别）到 localStorage
+ */
+function saveBaziForm() {
+  var dateEl = document.getElementById('birth-date');
+  var hourEl = document.getElementById('birth-hour');
+  var genderEl = document.querySelector('input[name="gender"]:checked');
+  if (!dateEl || !hourEl) return;
+  try {
+    localStorage.setItem(BAZI_FORM_STORAGE, JSON.stringify({
+      birthDate: dateEl.value,
+      birthHour: hourEl.value,
+      gender: genderEl ? genderEl.value : 'male'
+    }));
+  } catch (e) {
+    // localStorage 不可用时静默失败，不影响排盘
+  }
+}
+
+/**
+ * 从 localStorage 恢复排盘表单输入（页面加载时调用）
+ */
+function restoreBaziForm() {
+  try {
+    var raw = localStorage.getItem(BAZI_FORM_STORAGE);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    if (data.birthDate) {
+      var dateEl = document.getElementById('birth-date');
+      if (dateEl) dateEl.value = data.birthDate;
+    }
+    if (data.birthHour !== undefined && data.birthHour !== null) {
+      var hourEl = document.getElementById('birth-hour');
+      if (hourEl) hourEl.value = data.birthHour;
+    }
+    if (data.gender) {
+      var radio = document.querySelector('input[name="gender"][value="' + data.gender + '"]');
+      if (radio) radio.checked = true;
+    }
+  } catch (e) {
+    // 解析失败则忽略，用默认值
+  }
+}
+
+// 页面加载时恢复上次的排盘输入
+document.addEventListener('DOMContentLoaded', function () {
+  restoreBaziForm();
+});
+
 // ========== 核心计算函数：用户点击排盘按钮后调用 ==========
 
 /**
@@ -567,6 +621,9 @@ function calculateBazi() {
       gender = genderInputs[i].value === 'male' ? 1 : 0; // 1=男, 0=女
     }
   }
+
+  // 保存本次输入，下次打开自动填充
+  saveBaziForm();
 
   // 验证日期是否填写
   if (!dateInput) {
