@@ -610,76 +610,44 @@ body {
   }
 }
 
-/* ========== 手相/面相 SVG 热区 ========== */
+/* ========== 页面美化 ========== */
 
-/* SVG 热区层：铺满图片容器 */
-.hotspot-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* 容器不拦截事件，让热区子元素可点 */
+/* 主体背景：柔和米色渐变，滚动时保持固定 */
+body.bg-amber-50 {
+  background: linear-gradient(180deg, #fefce8 0%, #fffbeb 45%, #fef3c7 100%);
+  background-attachment: fixed;
 }
 
-/* 透明可点击热区（椭圆） */
-.hotspot-area {
-  fill: rgba(220, 38, 38, 0);
-  cursor: pointer;
-  pointer-events: all;
-  transition: fill 0.2s;
-}
-.hotspot-area:hover {
-  fill: rgba(220, 38, 38, 0.08);
+/* 标题栏：红金渐变 + 阴影，提升质感 */
+header.bg-red-900 {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 45%, #b91c1c 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
 }
 
-/* 数字标号圆点 */
-.hotspot-dot {
-  fill: rgba(220, 38, 38, 0.85);
-  stroke: #fff;
-  stroke-width: 2;
-  cursor: pointer;
-  pointer-events: all;
-  transition: fill 0.2s;
-}
-.hotspot-dot:hover {
-  fill: #b91c1c;
+/* 导航栏：渐变 + 阴影 */
+nav.bg-red-800 {
+  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 
-/* 数字文字 */
-.hotspot-label {
-  fill: #fff;
-  font-size: 13px;
-  font-weight: bold;
-  pointer-events: all;
-  cursor: pointer;
+/* Tab 激活态：亮红渐变 + 金色底边 */
+.tab-btn.active {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  border-bottom: 3px solid #fbbf24;
 }
 
-/* 点击后高亮状态（变绿色） */
-.hotspot-active {
-  fill: #059669 !important;
-  stroke: #fff;
-  stroke-width: 3;
+/* 结果卡片：更柔和阴影、更大圆角、hover 轻微上浮 */
+.result-card {
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-
-/* 卡片高亮 */
-.card-highlight {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
+.result-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   transform: translateY(-2px);
-  transition: box-shadow 0.3s, transform 0.3s;
 }
 
-/* 卡片上的数字标号 */
-.hotspot-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 9999px;
-  background: #dc2626;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  margin-right: 4px;
+/* 排盘表头：深红渐变 */
+.bazi-table th {
+  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
 }
