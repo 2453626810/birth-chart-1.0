@@ -7,13 +7,31 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f8fafc; color: #1e293b; }
-    .header { background: #7f1d1d; color: #fef3c7; padding: 20px; text-align: center; }
+    .header { background: linear-gradient(135deg, #7f1d1d, #b91c1c); color: #fef3c7; padding: 20px; text-align: center; }
     .header h1 { font-size: 22px; letter-spacing: 2px; }
     .header p { font-size: 13px; margin-top: 6px; color: #fbbf24; }
-    .toolbar { max-width: 900px; margin: 20px auto 0; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; }
-    .toolbar .count { font-size: 14px; color: #64748b; }
-    .toolbar button { background: #dc2626; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 14px; }
-    .toolbar button:hover { background: #b91c1c; }
+
+    /* 统计面板 */
+    .stats { max-width: 900px; margin: 20px auto 0; padding: 0 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .stat-card .num { font-size: 26px; font-weight: bold; color: #b91c1c; }
+    .stat-card .lbl { font-size: 13px; color: #64748b; margin-top: 4px; }
+    .year-dist { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 13px; color: #64748b; }
+
+    /* 工具栏 */
+    .toolbar { max-width: 900px; margin: 16px auto 0; padding: 0 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .filters select, .filters input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+    .filters input { width: 140px; }
+    .actions { display: flex; gap: 8px; }
+    button { border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 13px; }
+    .btn-primary { background: #dc2626; color: #fff; }
+    .btn-primary:hover { background: #b91c1c; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .count { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 14px; color: #64748b; }
+
+    /* 记录列表 */
     .list { max-width: 900px; margin: 12px auto 40px; padding: 0 16px; }
     .record { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
     .record .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -36,26 +54,83 @@
     <p>这里能看到所有用户在网站上的查询记录</p>
   </div>
 
+  <!-- 统计面板 -->
+  <div class="stats">
+    <div class="stat-card"><div class="num" id="stat-sessions">0</div><div class="lbl">总会话数</div></div>
+    <div class="stat-card"><div class="num" id="stat-qa">0</div><div class="lbl">总问答数</div></div>
+    <div class="stat-card"><div class="num" id="stat-male">0</div><div class="lbl">男性用户</div></div>
+    <div class="stat-card"><div class="num" id="stat-female">0</div><div class="lbl">女性用户</div></div>
+  </div>
+  <div class="year-dist" id="year-dist"></div>
+
+  <!-- 工具栏：筛选 + 导出 -->
   <div class="toolbar">
-    <span class="count" id="count">加载中…</span>
-    <button onclick="loadRecords()">🔄 刷新</button>
+    <div class="filters">
+      <select id="filter-gender">
+        <option value="">全部性别</option>
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+      <input type="text" id="filter-year" placeholder="出生年份，如 1995">
+      <input type="text" id="filter-keyword" placeholder="关键词搜索（四柱/问题等）">
+      <button class="btn-primary" onclick="applyFilter()">🔍 筛选</button>
+      <button class="btn-secondary" onclick="resetFilter()">重置</button>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" onclick="exportData('csv')">📥 导出 CSV</button>
+      <button class="btn-secondary" onclick="exportData('json')">📥 导出 JSON</button>
+      <button class="btn-primary" onclick="loadAll()">🔄 刷新</button>
+    </div>
   </div>
 
+  <div class="count" id="count">加载中…</div>
   <div class="list" id="list"></div>
 
   <script>
-    // 加载并渲染所有记录
+    // 当前筛选条件
+    var currentFilter = { gender: '', year: '', keyword: '' };
+
+    // 加载统计信息
+    function loadStats() {
+      fetch('/api/stats')
+        .then(function (r) { return r.json(); })
+        .then(function (s) {
+          document.getElementById('stat-sessions').textContent = s.totalSessions;
+          document.getElementById('stat-qa').textContent = s.totalQa;
+          document.getElementById('stat-male').textContent = s.genderCount['男'];
+          document.getElementById('stat-female').textContent = s.genderCount['女'];
+          // 年份分布
+          var years = Object.keys(s.yearCount).sort();
+          var yd = document.getElementById('year-dist');
+          if (years.length) {
+            var parts = [];
+            years.forEach(function (y) { parts.push(y + '年：' + s.yearCount[y] + ' 人'); });
+            yd.textContent = '出生年份分布：' + parts.join('　');
+          } else {
+            yd.textContent = '';
+          }
+        })
+        .catch(function () {});
+    }
+
+    // 加载并渲染记录
     function loadRecords() {
-      fetch('/api/records')
+      // 拼接筛选参数
+      var params = [];
+      if (currentFilter.gender) params.push('gender=' + encodeURIComponent(currentFilter.gender));
+      if (currentFilter.year) params.push('year=' + encodeURIComponent(currentFilter.year));
+      if (currentFilter.keyword) params.push('keyword=' + encodeURIComponent(currentFilter.keyword));
+      var url = '/api/records' + (params.length ? '?' + params.join('&') : '');
+
+      fetch(url)
         .then(function (r) { return r.json(); })
         .then(function (records) {
           document.getElementById('count').textContent = '共 ' + records.length + ' 个会话';
           var list = document.getElementById('list');
           if (!records.length) {
-            list.innerHTML = '<div class="empty">还没有任何查询记录，去网站排一次八字试试吧～</div>';
+            list.innerHTML = '<div class="empty">没有符合条件的记录</div>';
             return;
           }
-          // 倒序显示（最新的在前）
           records.reverse();
           var html = '';
           for (var i = 0; i < records.length; i++) {
@@ -89,7 +164,6 @@
         if (r.birthDate) html += '<div><span class="label">出生：</span>' + esc(r.birthDate) + '　' + esc(r.birthHourLabel || '') + '　' + esc(r.genderLabel || '') + '</div>';
         if (r.pillars) html += '<div><span class="label">四柱：</span>' + esc(r.pillars) + '</div>';
         if (r.wuxing) html += '<div><span class="label">五行：</span>' + esc(r.wuxing) + '</div>';
-        // 显示该会话关联的 AI 问答（同一个人的排盘 + 他问的问题放在一起）
         if (r.qa && r.qa.length) {
           html += '<div class="qa-block">';
           html += '<div class="label">💬 AI 问答（' + r.qa.length + ' 条）：</div>';
@@ -107,6 +181,34 @@
       return html;
     }
 
+    // 应用筛选
+    function applyFilter() {
+      currentFilter.gender = document.getElementById('filter-gender').value;
+      currentFilter.year = document.getElementById('filter-year').value.trim();
+      currentFilter.keyword = document.getElementById('filter-keyword').value.trim();
+      loadRecords();
+    }
+
+    // 重置筛选
+    function resetFilter() {
+      currentFilter = { gender: '', year: '', keyword: '' };
+      document.getElementById('filter-gender').value = '';
+      document.getElementById('filter-year').value = '';
+      document.getElementById('filter-keyword').value = '';
+      loadRecords();
+    }
+
+    // 导出数据
+    function exportData(format) {
+      window.location.href = '/api/export?format=' + format;
+    }
+
+    // 加载全部（统计 + 记录）
+    function loadAll() {
+      loadStats();
+      loadRecords();
+    }
+
     function esc(s) {
       if (s === null || s === undefined) return '';
       var div = document.createElement('div');
@@ -115,7 +217,7 @@
     }
 
     // 页面加载时自动拉取
-    loadRecords();
+    loadAll();
   </script>
 </body>
 </html>

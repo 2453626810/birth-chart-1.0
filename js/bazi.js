@@ -1566,51 +1566,78 @@ function copyBaziResult() {
     return;
   }
 
-  // 提取纯文本内容（去掉HTML标签）
-  var text = container.innerText || container.textContent;
+  // 提取纯文本，去掉复制按钮自身的文字、压缩多余空行
+  var text = (container.innerText || container.textContent || '')
+    .replace(/📋\s*一键复制排盘结果/g, '')
+    .replace(/已复制！/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 
-  // 去掉"一键复制"按钮的文本
-  text = text.replace(/📋\s*一键复制排盘结果/g, '').replace(/已复制！/g, '');
+  if (!text) {
+    alert('没有可复制的内容');
+    return;
+  }
 
-  // 用现代浏览器的剪贴板API复制
-  if (navigator.clipboard && navigator.clipboard.writeText) {
+  // 现代剪贴板 API 只在安全上下文（https 或 localhost）下可用
+  if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(function () {
-      var btn = document.getElementById('btn-copy');
-      if (btn) {
-        var originalHtml = btn.innerHTML;
-        btn.innerHTML = '✅ 已复制！';
-        btn.classList.add('bg-green-100');
-        setTimeout(function () {
-          btn.innerHTML = originalHtml;
-          btn.classList.remove('bg-green-100');
-        }, 2000);
-      }
+      showCopySuccess();
     }).catch(function () {
       fallbackCopy(text);
     });
   } else {
+    // 非安全上下文（如局域网 IP 访问），直接走兼容方案
     fallbackCopy(text);
   }
 }
 
 /**
- * fallbackCopy() — 兼容旧浏览器的复制方案
+ * 复制成功后的视觉反馈（同时更新顶部和底部的复制按钮）
+ */
+function showCopySuccess() {
+  var btns = document.querySelectorAll('button[onclick="copyBaziResult()"]');
+  if (btns.length) {
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].innerHTML = '✅ 已复制！';
+      btns[i].classList.add('bg-green-100');
+      (function (btn) {
+        setTimeout(function () {
+          btn.innerHTML = '📋 一键复制排盘结果';
+          btn.classList.remove('bg-green-100');
+        }, 2000);
+      })(btns[i]);
+    }
+  } else {
+    alert('排盘结果已复制到剪贴板！');
+  }
+}
+
+/**
+ * fallbackCopy() — 兼容旧浏览器/非安全上下文的复制方案
  * 创建一个临时的textarea元素来复制文本
  */
 function fallbackCopy(text) {
   var textarea = document.createElement('textarea');
   textarea.value = text;
+  textarea.setAttribute('readonly', '');
   textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
+  textarea.style.left = '-9999px';
+  textarea.style.top = '0';
   document.body.appendChild(textarea);
+  textarea.focus();
   textarea.select();
+  var copied = false;
   try {
-    document.execCommand('copy');
-    alert('排盘结果已复制到剪贴板！');
+    copied = document.execCommand('copy');
   } catch (e) {
-    alert('复制失败，请手动选择文字后 Ctrl+C 复制');
+    copied = false;
   }
   document.body.removeChild(textarea);
+  if (copied) {
+    showCopySuccess();
+  } else {
+    alert('复制失败，请手动选择文字后 Ctrl+C 复制');
+  }
 }
 
 /**

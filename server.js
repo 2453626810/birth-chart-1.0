@@ -89,10 +89,103 @@ app.post('/api/records', function (req, res) {
   res.json({ ok: true, id: record.id, sessionId: record.sessionId });
 });
 
-// 查看所有记录
+// 查看所有记录（支持筛选：?gender=男/女 &year=1995 &keyword=关键词）
 app.get('/api/records', function (req, res) {
-  res.json(readRecords());
+  var records = readRecords();
+  var gender = req.query.gender;
+  var year = req.query.year;
+  var keyword = req.query.keyword;
+
+  if (gender) {
+    records = records.filter(function (r) { return r.genderLabel === gender; });
+  }
+  if (year) {
+    records = records.filter(function (r) { return r.birthDate && String(r.birthDate).indexOf(String(year)) === 0; });
+  }
+  if (keyword) {
+    records = records.filter(function (r) { return JSON.stringify(r).indexOf(keyword) !== -1; });
+  }
+  res.json(records);
 });
+
+// 统计信息：总会话数、总问答数、性别分布、出生年份分布
+app.get('/api/stats', function (req, res) {
+  var records = readRecords();
+  var totalSessions = records.length;
+  var totalQa = 0;
+  var genderCount = { '男': 0, '女': 0, '未知': 0 };
+  var yearCount = {};
+
+  records.forEach(function (r) {
+    if (r.qa) totalQa += r.qa.length;
+    if (r.genderLabel === '男' || r.genderLabel === '女') {
+      genderCount[r.genderLabel]++;
+    } else {
+      genderCount['未知']++;
+    }
+    if (r.birthDate) {
+      var y = String(r.birthDate).substring(0, 4);
+      if (y) yearCount[y] = (yearCount[y] || 0) + 1;
+    }
+  });
+
+  res.json({
+    totalSessions: totalSessions,
+    totalQa: totalQa,
+    genderCount: genderCount,
+    yearCount: yearCount
+  });
+});
+
+// 导出记录：?format=csv（默认）或 ?format=json
+app.get('/api/export', function (req, res) {
+  var records = readRecords();
+  var format = String(req.query.format || 'csv').toLowerCase();
+
+  if (format === 'json') {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename=records.json');
+    return res.send(JSON.stringify(records, null, 2));
+  }
+
+  // CSV（带 BOM，让 Excel 正确识别中文）
+  var lines = ['会话ID,出生日期,时辰,性别,四柱,五行,问答数,问答内容,排盘时间'];
+  records.forEach(function (r) {
+    var qaText = '';
+    if (r.qa && r.qa.length) {
+      var qaParts = [];
+      r.qa.forEach(function (q) {
+        qaParts.push('问:' + (q.question || '') + ' 答:' + (q.answer || ''));
+      });
+      qaText = qaParts.join(' | ');
+    }
+    var row = [
+      r.sessionId || '',
+      r.birthDate || '',
+      r.birthHourLabel || '',
+      r.genderLabel || '',
+      r.pillars || '',
+      r.wuxing || '',
+      r.qa ? r.qa.length : 0,
+      qaText,
+      r.time || ''
+    ];
+    lines.push(row.map(csvCell).join(','));
+  });
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename=records.csv');
+  res.send('﻿' + lines.join('\n'));
+});
+
+// CSV 单元格转义（处理逗号、引号、换行）
+function csvCell(value) {
+  var s = String(value === null || value === undefined ? '' : value);
+  if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
 
 // 管理页面
 app.get('/', function (req, res) {
