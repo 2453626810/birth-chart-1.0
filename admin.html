@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>查询记录后台</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f8fafc; color: #1e293b; }
+    .header { background: #7f1d1d; color: #fef3c7; padding: 20px; text-align: center; }
+    .header h1 { font-size: 22px; letter-spacing: 2px; }
+    .header p { font-size: 13px; margin-top: 6px; color: #fbbf24; }
+    .toolbar { max-width: 900px; margin: 20px auto 0; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; }
+    .toolbar .count { font-size: 14px; color: #64748b; }
+    .toolbar button { background: #dc2626; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 14px; }
+    .toolbar button:hover { background: #b91c1c; }
+    .list { max-width: 900px; margin: 12px auto 40px; padding: 0 16px; }
+    .record { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .record .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+    .badge-bazi { background: #fef3c7; color: #92400e; }
+    .badge-qa { background: #dbeafe; color: #1e40af; }
+    .record .time { font-size: 12px; color: #94a3b8; }
+    .record .content { font-size: 14px; line-height: 1.7; color: #334155; }
+    .record .content .label { color: #64748b; font-size: 13px; }
+    .empty { text-align: center; color: #94a3b8; padding: 60px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📊 查询记录后台</h1>
+    <p>这里能看到所有用户在网站上的查询记录</p>
+  </div>
+
+  <div class="toolbar">
+    <span class="count" id="count">加载中…</span>
+    <button onclick="loadRecords()">🔄 刷新</button>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <script>
+    // 加载并渲染所有记录
+    function loadRecords() {
+      fetch('/api/records')
+        .then(function (r) { return r.json(); })
+        .then(function (records) {
+          document.getElementById('count').textContent = '共 ' + records.length + ' 条记录';
+          var list = document.getElementById('list');
+          if (!records.length) {
+            list.innerHTML = '<div class="empty">还没有任何查询记录，去网站排一次八字试试吧～</div>';
+            return;
+          }
+          // 倒序显示（最新的在前）
+          records.reverse();
+          var html = '';
+          for (var i = 0; i < records.length; i++) {
+            html += renderRecord(records[i]);
+          }
+          list.innerHTML = html;
+        })
+        .catch(function () {
+          document.getElementById('count').textContent = '加载失败';
+          document.getElementById('list').innerHTML = '<div class="empty">加载记录失败</div>';
+        });
+    }
+
+    // 渲染单条记录
+    function renderRecord(r) {
+      var html = '<div class="record">';
+      html += '<div class="top">';
+      if (r.type === 'qa') {
+        html += '<span class="badge badge-qa">💬 AI 问答</span>';
+      } else {
+        html += '<span class="badge badge-bazi">🎯 八字排盘</span>';
+      }
+      html += '<span class="time">' + (r.time || '') + '</span>';
+      html += '</div>';
+
+      html += '<div class="content">';
+      if (r.type === 'qa') {
+        html += '<div><span class="label">问：</span>' + esc(r.question) + '</div>';
+        html += '<div><span class="label">答：</span>' + esc(r.answer) + '</div>';
+      } else {
+        if (r.birthDate) html += '<div><span class="label">出生：</span>' + esc(r.birthDate) + '　' + esc(r.birthHourLabel || '') + '　' + esc(r.genderLabel || '') + '</div>';
+        if (r.pillars) html += '<div><span class="label">四柱：</span>' + esc(r.pillars) + '</div>';
+        if (r.wuxing) html += '<div><span class="label">五行：</span>' + esc(r.wuxing) + '</div>';
+      }
+      html += '</div>';
+      html += '</div>';
+      return html;
+    }
+
+    function esc(s) {
+      if (s === null || s === undefined) return '';
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(String(s)));
+      return div.innerHTML;
+    }
+
+    // 页面加载时自动拉取
+    loadRecords();
+  </script>
+</body>
+</html>

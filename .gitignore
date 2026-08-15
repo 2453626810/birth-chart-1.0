@@ -8,3 +8,9 @@ lunar-javascript-master/
 # 系统文件
 Thumbs.db
 .DS_Store
+
+# Node 依赖
+node_modules/
+
+# 后端查询记录（用户数据，不提交到 git）
+data/records.json

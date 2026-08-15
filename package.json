@@ -1,0 +1,12 @@
+{
+  "name": "bazi-backend",
+  "version": "1.0.0",
+  "description": "八字排盘网站的后端记录服务（接收并存储用户查询记录）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -43,3 +43,27 @@ function initTabs() {
     });
   });
 }
+
+// ========== 后端记录上报 ==========
+
+// 后端服务地址（自建后端，见 server.js，默认本地 3000 端口）
+var BACKEND_URL = 'http://localhost:3000';
+
+/**
+ * 把查询记录上报到后端
+ * 后端没启动或网络不通时静默失败，不影响网站正常使用
+ * @param {object} record - 要上报的记录对象
+ */
+function reportRecord(record) {
+  try {
+    fetch(BACKEND_URL + '/api/records', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record)
+    }).catch(function () {
+      // 后端未启动，静默忽略
+    });
+  } catch (e) {
+    // 老浏览器不支持 fetch 时忽略
+  }
+}
