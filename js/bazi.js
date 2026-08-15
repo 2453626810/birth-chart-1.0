@@ -1560,23 +1560,14 @@ function analyzeHealth(result) {
  * 用户点击复制按钮时调用
  */
 function copyBaziResult() {
-  var container = document.getElementById('bazi-result');
-  if (!container || container.classList.contains('hidden')) {
+  var r = window.__currentBaziResult;
+  if (!r) {
     alert('请先排八字盘再复制哦～');
     return;
   }
 
-  // 提取纯文本，去掉复制按钮自身的文字、压缩多余空行
-  var text = (container.innerText || container.textContent || '')
-    .replace(/📋\s*一键复制排盘结果/g, '')
-    .replace(/已复制！/g, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-
-  if (!text) {
-    alert('没有可复制的内容');
-    return;
-  }
+  // 生成排版清晰、一眼能看懂的排盘结果文本
+  var text = buildBaziCopyText(r);
 
   // 现代剪贴板 API 只在安全上下文（https 或 localhost）下可用
   if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
@@ -1589,6 +1580,131 @@ function copyBaziResult() {
     // 非安全上下文（如局域网 IP 访问），直接走兼容方案
     fallbackCopy(text);
   }
+}
+
+/**
+ * buildBaziCopyText() — 把八字结果拼成排版清晰的纯文本
+ * 分区块展示：出生信息、四柱表、五行、用神、性格、当前运势、免责声明
+ * 相比以前直接抓 innerText 的一坨文字，这里每块都有标题、四柱对齐成表格
+ *
+ * @param {object} r - 八字计算结果对象（window.__currentBaziResult）
+ */
+function buildBaziCopyText(r) {
+  var lines = [];
+
+  // 1. 标题
+  lines.push('📋 八字命盘');
+  lines.push('');
+
+  // 2. 出生信息
+  lines.push('📅 公历 ' + r.solarDate + '　' + getSelectedGenderLabel() + '　' + getSelectedHourLabel());
+  lines.push('🗓 农历 ' + r.lunarDate);
+  lines.push('');
+
+  // 3. 四柱排盘表（年柱、月柱、日柱、时柱 四列对齐）
+  lines.push('【四柱八字】');
+  lines.push(padCell('', 4) + '　' + padCell('年柱', 3) + '　' + padCell('月柱', 3) + '　' + padCell('日柱', 3) + '　' + padCell('时柱', 3));
+  var tableRows = [
+    ['天干', r.yearPillar[0], r.monthPillar[0], r.dayPillar[0], r.timePillar[0]],
+    ['天干十神', r.yearShiShenGan, r.monthShiShenGan, r.dayShiShenGan, r.timeShiShenGan],
+    ['地支', r.yearPillar[1], r.monthPillar[1], r.dayPillar[1], r.timePillar[1]],
+    ['地支十神', r.yearShiShenZhi, r.monthShiShenZhi, r.dayShiShenZhi, r.timeShiShenZhi],
+    ['藏干', r.yearHideGan, r.monthHideGan, r.dayHideGan, r.timeHideGan],
+    ['纳音', r.yearNaYin, r.monthNaYin, r.dayNaYin, r.timeNaYin]
+  ];
+  for (var i = 0; i < tableRows.length; i++) {
+    var row = tableRows[i];
+    lines.push(padCell(row[0], 4) + '　' + padCell(row[1], 3) + '　' + padCell(row[2], 3) + '　' + padCell(row[3], 3) + '　' + padCell(row[4], 3));
+  }
+  lines.push('');
+
+  // 4. 五行统计
+  var wc = r.wuxingCount;
+  var wxNames = ['金', '木', '水', '火', '土'];
+  var wxParts = [];
+  for (var j = 0; j < wxNames.length; j++) {
+    wxParts.push(wxNames[j] + ' ' + wc[wxNames[j]]);
+  }
+  lines.push('【五行】' + wxParts.join('　'));
+  lines.push('');
+
+  // 5. 用神分析
+  var ys = r.yongShen;
+  lines.push('【用神分析】');
+  lines.push('日主：' + ys.dayElement + '（' + ys.strength + '）');
+  lines.push('喜用神：' + ys.yongShen.join('、') + '　|　忌神：' + ys.jiShen.join('、'));
+  lines.push('');
+
+  // 6. 性格（一句话概括）
+  if (r.personality && r.personality.summary) {
+    lines.push('【性格】' + r.personality.summary);
+    lines.push('');
+  }
+
+  // 7. 当前运势
+  var cr = r.currentReading;
+  if (cr && cr.found && cr.daYunGanZhi) {
+    var yunLine = '【当前运势】大运 ' + cr.daYunGanZhi;
+    if (cr.daYunShiShen) yunLine += '（' + cr.daYunShiShen + '）';
+    if (cr.liuNianGanZhi) {
+      yunLine += '　流年 ' + cr.liuNianGanZhi;
+      if (cr.liuNianShiShen) yunLine += '（' + cr.liuNianShiShen + '）';
+    }
+    lines.push(yunLine);
+    if (cr.combinedDesc) lines.push(cr.combinedDesc);
+    lines.push('');
+  }
+
+  // 8. 免责声明
+  lines.push('—— 以上内容仅供传统文化参考与娱乐，请勿作为人生决策依据 ——');
+
+  return lines.join('\n');
+}
+
+/**
+ * padCell() — 把文本补齐到指定「全角宽度」，让表格列对齐
+ * 八字内容都是中文，每个字算一个全角位，不足就用全角空格补
+ *
+ * @param {string} s - 要补齐的文本
+ * @param {number} width - 目标全角宽度
+ */
+function padCell(s, width) {
+  s = String(s == null ? '' : s);
+  var w = 0;
+  for (var i = 0; i < s.length; i++) {
+    w += 1;
+  }
+  while (w < width) {
+    s += '　';
+    w++;
+  }
+  return s;
+}
+
+/**
+ * getSelectedGenderLabel() — 读取表单里选中的性别，返回"男"或"女"
+ */
+function getSelectedGenderLabel() {
+  var els = document.getElementsByName('gender');
+  for (var i = 0; i < els.length; i++) {
+    if (els[i].checked) {
+      return els[i].value === 'male' ? '男' : '女';
+    }
+  }
+  return '男';
+}
+
+/**
+ * getSelectedHourLabel() — 读取表单里选中的时辰名（如"未时"，去掉后面的时间范围）
+ */
+function getSelectedHourLabel() {
+  var sel = document.getElementById('birth-hour');
+  if (sel && sel.selectedIndex >= 0) {
+    var t = sel.options[sel.selectedIndex].text;
+    var idx = t.indexOf('（');
+    return idx >= 0 ? t.substring(0, idx) : t;
+  }
+  return '';
 }
 
 /**
