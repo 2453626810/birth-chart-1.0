@@ -1,0 +1,122 @@
+[
+  {
+    "index": 0,
+    "name": "甲",
+    "element": "木",
+    "yinYang": "阳",
+    "direction": "东方",
+    "season": "春天",
+    "organ": "肝",
+    "color": "青色",
+    "personality": "正直、有上进心、目标感强、坚韧不拔。像一棵参天大树，认定的事情会坚持到底。",
+    "description": "甲木是十天干之首，代表参天大树，性格刚直不阿。甲木日主的人通常有领导气质，做事光明磊落。"
+  },
+  {
+    "index": 1,
+    "name": "乙",
+    "element": "木",
+    "yinYang": "阴",
+    "direction": "东方",
+    "season": "春天",
+    "organ": "肝",
+    "color": "青色",
+    "personality": "柔韧、心思细腻、善于变通、适应能力强。像花草藤蔓一样，看似柔弱实则生命力顽强。",
+    "description": "乙木代表花草藤蔓，性格温和婉转。乙木日主的人通常人际关系好，善于以柔克刚。"
+  },
+  {
+    "index": 2,
+    "name": "丙",
+    "element": "火",
+    "yinYang": "阳",
+    "direction": "南方",
+    "season": "夏天",
+    "organ": "心",
+    "color": "红色",
+    "personality": "热情奔放、开朗大方、非常自信、喜欢被关注。像太阳一样温暖身边的人，走到哪里都是焦点。",
+    "description": "丙火代表烈日阳光，性格光明磊落。丙火日主的人通常精力充沛，待人真诚直率。"
+  },
+  {
+    "index": 3,
+    "name": "丁",
+    "element": "火",
+    "yinYang": "阴",
+    "direction": "南方",
+    "season": "夏天",
+    "organ": "心",
+    "color": "红色",
+    "personality": "内心温暖、重情重义、有责任心、擅长照顾别人。像烛火一样不断燃烧自己温暖他人。",
+    "description": "丁火代表灯烛之火，性格外柔内刚。丁火日主的人通常内心坚定，有一种不服输的韧劲。"
+  },
+  {
+    "index": 4,
+    "name": "戊",
+    "element": "土",
+    "yinYang": "阳",
+    "direction": "中央",
+    "season": "长夏",
+    "organ": "脾",
+    "color": "黄色",
+    "personality": "稳重可靠、诚信踏实、说到做到。像高山一样给人安全感，是大家眼中的靠谱担当。",
+    "description": "戊土代表城墙高山，性格厚重沉稳。戊土日主的人通常讲信用，做事脚踏实地。"
+  },
+  {
+    "index": 5,
+    "name": "己",
+    "element": "土",
+    "yinYang": "阴",
+    "direction": "中央",
+    "season": "长夏",
+    "organ": "脾",
+    "color": "黄色",
+    "personality": "包容温和、善于照顾别人、有耐心。像田园一样滋养万物，总能让身边的人感到舒适。",
+    "description": "己土代表田园之土，性格温和包容。己土日主的人通常善解人意，是很好的倾听者。"
+  },
+  {
+    "index": 6,
+    "name": "庚",
+    "element": "金",
+    "yinYang": "阳",
+    "direction": "西方",
+    "season": "秋天",
+    "organ": "肺",
+    "color": "白色",
+    "personality": "果断刚毅、讲义气、有原则、敢作敢为。像刀剑一样锋利，做事干净利落不拖泥带水。",
+    "description": "庚金代表刀剑利器，性格刚毅果决。庚金日主的人通常执行力强，有正义感。"
+  },
+  {
+    "index": 7,
+    "name": "辛",
+    "element": "金",
+    "yinYang": "阴",
+    "direction": "西方",
+    "season": "秋天",
+    "organ": "肺",
+    "color": "白色",
+    "personality": "追求完美、品味好、注重细节、自尊心强。像珠宝一样精致，对自己的要求很高。",
+    "description": "辛金代表珠宝首饰，性格精致细腻。辛金日主的人通常审美品位好，追求高品质。"
+  },
+  {
+    "index": 8,
+    "name": "壬",
+    "element": "水",
+    "yinYang": "阳",
+    "direction": "北方",
+    "season": "冬天",
+    "organ": "肾",
+    "color": "黑色",
+    "personality": "聪明灵活、足智多谋、善于交际。像江河一样奔腾不息，朋友遍天下，见识广博。",
+    "description": "壬水代表江河大海，性格豁达开朗。壬水日主的人通常社交能力出众，适应力极强。"
+  },
+  {
+    "index": 9,
+    "name": "癸",
+    "element": "水",
+    "yinYang": "阴",
+    "direction": "北方",
+    "season": "冬天",
+    "organ": "肾",
+    "color": "黑色",
+    "personality": "沉静内敛、洞察力强、心思缜密。像溪水一样润物无声，内心世界非常丰富。",
+    "description": "癸水代表雨露之水，性格细腻内敛。癸水日主的人通常直觉敏锐，观察力很强。"
+  }
+]

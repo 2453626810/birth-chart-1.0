@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(curl -s \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Chiromancy&cmtype=file&cmlimit=100&format=json\")",
+      "Bash(curl -s \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Physiognomy&cmtype=file&cmlimit=100&format=json\")",
+      "Bash(curl -sS -m 20 \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Chiromancy&cmtype=file&cmlimit=20&format=json\" -o /tmp/chiromancy.json -w \"HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Read(//tmp/**)",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Chiromancy&cmtype=file&cmlimit=30&format=json\" -o /tmp/chiromancy.json -w \"HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Physiognomy&cmtype=file&cmlimit=60&format=json\" -o /tmp/physio.json -w \"HTTP:%{http_code}\\\\n\")",
+      "Bash(python -c \"import json;d=json.load\\(open\\('/tmp/physio.json',encoding='utf-8'\\)\\);[print\\(m['title']\\) for m in d['query']['categorymembers']]\")",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Chiromancy&cmtype=file&cmlimit=200&format=json\" -o /tmp/chiro.json -w \"HTTP:%{http_code}\\\\n\")",
+      "Bash(python -c \"import json;d=json.load\\(open\\('/tmp/chiro.json',encoding='utf-8'\\)\\);[print\\(m['title']\\) for m in d['query']['categorymembers']]\")",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Physiognomy&cmtype=file&cmlimit=100&format=json\")",
+      "Bash(python -c \"import json,sys;d=json.load\\(sys.stdin\\);[print\\(m['title']\\) for m in d['query']['categorymembers']]\")",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Chiromancy&cmtype=file&cmlimit=200&format=json\")",
+      "Bash(export PYTHONIOENCODING=utf-8)",
+      "Bash(curl -sS -m 20 --ssl-no-revoke \"https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:Physiognomy&cmtype=file&cmlimit=200&format=json\")",
+      "Bash(mkdir -p img/_candidates)",
+      "Bash(curl -sS -m 30 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Chart_of_the_Hand.png/900px-Chart_of_the_Hand.png\" -o palm_chart_of_hand.png -w \"chart_of_hand HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(curl -sS -m 30 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/3/38/Chief_Lines_of_the_Hand.jpg\" -o palm_chief_lines.jpg -w \"chief_lines HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(curl -sS -m 30 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Age_as_Computed_on_Lines_of_Life_and_Fate.png/900px-Age_as_Computed_on_Lines_of_Life_and_Fate.png\" -o palm_age_lines.png -w \"age_lines HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(curl -sS -m 30 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/c/cc/Face_and_text%2C_%22Metoposcopia%22%2C_S._Fuchs%2C_1615_Wellcome_L0013997.jpg\" -o face_metoposcopia.jpg -w \"metoposcopia HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(python -c ' *)",
+      "Bash(curl -sS -m 60 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/6/67/Chart_of_the_Hand.png\" -o palm_chart_of_hand.png -w \"chart_of_hand HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(curl -sS -m 60 --ssl-no-revoke -L \"https://upload.wikimedia.org/wikipedia/commons/e/ee/Chinese_C18%3B_Paediatric_pox_--_outcome_by_physiognomic_signs_Wellcome_L0039833.jpg\" -o face_chinese.jpg -w \"chinese_face HTTP:%{http_code} SIZE:%{size_download}\\\\n\")",
+      "Bash(python *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:8000/index.html)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:8000/)",
+      "Bash(node --check js/palm.js)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('data/face-meanings.json','utf8'\\)\\); console.log\\('face-meanings.json 语法 OK，十二宫数量:', Object.keys\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('data/face-meanings.json','utf8'\\)\\).twelvePalaces\\).length\\)\")",
+      "Bash(node --check js/face.js)",
+      "Bash(node -e ' *)",
+      "Bash(node *)"
+    ]
+  }
+}

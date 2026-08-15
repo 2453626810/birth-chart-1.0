@@ -1,0 +1,10 @@
+# lunar-javascript 源码（仅用于API参考，不纳入网站本身）
+lunar-javascript-master/
+
+# IDE 配置
+.vscode/
+.idea/
+
+# 系统文件
+Thumbs.db
+.DS_Store

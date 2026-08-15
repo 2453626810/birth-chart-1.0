@@ -1,0 +1,685 @@
+/* ========== 全局自定义样式 ========== */
+
+/* ===== 基础字体设置 ===== */
+/* 使用中文友好字体：优先系统自带中文字体 */
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+}
+
+/* ===== Tab 切换样式 ===== */
+.tab-content {
+  display: none;
+}
+.tab-content:not(.hidden) {
+  display: block;
+}
+/* 确保 hidden 类隐藏元素 */
+.tab-content.hidden {
+  display: none;
+}
+
+/* 当前激活的Tab按钮样式（红色背景变亮 + 底部金色高亮条） */
+.tab-btn.active {
+  background-color: #b91c1c; /* red-700 */
+  border-bottom: 3px solid #fbbf24; /* amber-400 */
+}
+
+/* Tab按钮平滑过渡动画 */
+.tab-btn {
+  transition: background-color 0.2s ease, border-bottom 0.2s ease;
+}
+
+/* ===== 排盘结果区四柱表格样式 ===== */
+.bazi-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.bazi-table th,
+.bazi-table td {
+  border: 2px solid #d97706; /* amber-600 */
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+.bazi-table th {
+  background-color: #991b1b; /* red-800 */
+  color: #fef3c7; /* amber-100 */
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.bazi-table td {
+  background-color: #fffbeb; /* amber-50 */
+  color: #1a1a1a;
+}
+/* 表格行悬停效果 */
+.bazi-table tbody tr:hover td {
+  background-color: #fef3c7; /* amber-100 */
+}
+
+/* ===== 五行色块（用于五行统计等地方） ===== */
+.wuxing-metal { background-color: #f1f5f9; color: #334155; }
+.wuxing-wood { background-color: #dcfce7; color: #166534; }
+.wuxing-water { background-color: #dbeafe; color: #1e40af; }
+.wuxing-fire { background-color: #fee2e2; color: #991b1b; }
+.wuxing-earth { background-color: #fef3c7; color: #92400e; }
+
+/* ===== 结果卡片通用样式 ===== */
+.result-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #fde68a;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* 卡片渐入动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 给每张结果卡片设置不同的延迟，实现依次出现的效果 */
+.result-card:nth-child(1) { animation-delay: 0s; }
+.result-card:nth-child(2) { animation-delay: 0.1s; }
+.result-card:nth-child(3) { animation-delay: 0.2s; }
+.result-card:nth-child(4) { animation-delay: 0.3s; }
+.result-card:nth-child(5) { animation-delay: 0.4s; }
+.result-card:nth-child(6) { animation-delay: 0.5s; }
+
+/* ===== 弹窗遮罩层 ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== 弹窗内容 ===== */
+.modal-content {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: scaleIn 0.25s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== 加载动画（八字计算时显示） ===== */
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fde68a; /* amber-200 */
+  border-top: 4px solid #991b1b; /* red-800 */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-overlay {
+  text-align: center;
+  padding: 40px;
+}
+
+/* ===== 响应式：手机端适配 ===== */
+@media (max-width: 640px) {
+  /* 表格在手机上缩小字体和内边距 */
+  .bazi-table th,
+  .bazi-table td {
+    padding: 6px 4px;
+    font-size: 0.85rem;
+  }
+
+  /* 标题缩小 */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Tab按钮缩小以适应小屏幕 */
+  .tab-btn {
+    font-size: 0.75rem;
+    padding: 8px 4px;
+  }
+
+  /* 弹窗占满更多空间 */
+  .modal-content {
+    max-width: 95%;
+    width: 95%;
+    padding: 16px;
+    max-height: 90vh;
+  }
+
+  /* 结果卡片内边距减小 */
+  .result-card {
+    padding: 14px;
+  }
+
+  /* 五行统计的五列在手机上缩为小字号 */
+  .grid.grid-cols-5 {
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================
+   AI 智能问答弹窗样式（qa.js 使用）
+   ========================================== */
+
+/* 弹窗遮罩 —— 复用现有 .modal-overlay 的定位，这里做微调 */
+.qa-modal-overlay {
+  /* 保证问答弹窗在最顶层（palm.js 的弹窗 z-index 是 100） */
+  z-index: 200;
+}
+
+/* 弹窗内容容器 —— 在现有 .modal-content 基础上加宽加高 */
+.qa-modal-content {
+  max-width: 650px !important;
+  width: 95%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;  /* 去掉默认内边距，改为内部分区控制 */
+  overflow: hidden !important;  /* 改为内部滚动 */
+}
+
+/* ===== 标题栏 ===== */
+.qa-header {
+  background: linear-gradient(135deg, #991b1b, #b91c1c);
+  color: #fef3c7;
+  padding: 16px 20px;
+  border-radius: 16px 16px 0 0;
+  position: relative;
+  flex-shrink: 0;  /* 不被压缩 */
+}
+.qa-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+.qa-subtitle {
+  font-size: 0.8rem;
+  margin: 4px 0 0;
+  opacity: 0.85;
+  color: #fde68a;
+}
+/* 关闭按钮 */
+.qa-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #fef3c7;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.qa-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== API Key 设置区 ===== */
+.qa-apikey-section {
+  background: #fef3c7;
+  border-bottom: 2px solid #fbbf24;
+  padding: 14px 20px;
+  flex-shrink: 0;
+}
+.qa-apikey-inner {
+  max-width: 100%;
+}
+.qa-apikey-label {
+  font-weight: bold;
+  color: #92400e;
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+}
+.qa-apikey-hint {
+  font-size: 0.78rem;
+  color: #78716c;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.qa-link {
+  color: #991b1b;
+  text-decoration: underline;
+}
+.qa-apikey-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.qa-apikey-input {
+  flex: 1;
+  border: 2px solid #fbbf24;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qa-apikey-input:focus {
+  border-color: #991b1b;
+}
+.qa-apikey-btn {
+  background: #991b1b;
+  color: #fef3c7;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.qa-apikey-btn:hover {
+  background: #b91c1c;
+}
+.qa-apikey-error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin: 6px 0 0;
+}
+
+/* ===== 推荐问题标签云 ===== */
+.qa-tags-section {
+  padding: 12px 20px;
+  border-bottom: 1px solid #fde68a;
+  flex-shrink: 0;
+}
+.qa-tags-label {
+  font-size: 0.8rem;
+  color: #78716c;
+  margin: 0 0 8px;
+}
+.qa-tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+/* 标签按钮 —— 圆角小胶囊 */
+.qa-tag {
+  display: inline-block;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  color: #92400e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  user-select: none;  /* 防止双击选中文字 */
+}
+.qa-tag:hover {
+  background: #fbbf24;
+  color: #7c2d12;
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ===== 对话消息区 ===== */
+.qa-chat-area {
+  flex: 1;  /* 占据剩余空间 */
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 180px;
+  max-height: 360px;
+}
+/* 美化滚动条 */
+.qa-chat-area::-webkit-scrollbar {
+  width: 5px;
+}
+.qa-chat-area::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 10px;
+}
+.qa-chat-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===== 消息气泡 ===== */
+.qa-bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  line-height: 1.65;
+  font-size: 0.88rem;
+  word-break: break-word;
+  animation: qaBubbleIn 0.3s ease;
+}
+/* 用户气泡：红底白字，靠右 */
+.qa-bubble-user {
+  align-self: flex-end;
+  background: #991b1b;
+  color: #fef3c7;
+  border-bottom-right-radius: 4px;
+}
+/* AI 气泡：琥珀底深色字，靠左 */
+.qa-bubble-bot {
+  align-self: flex-start;
+  background: #fffbeb;
+  color: #1a1a1a;
+  border: 1px solid #fde68a;
+  border-bottom-left-radius: 4px;
+}
+/* 欢迎气泡：稍微特别一点 */
+.qa-welcome {
+  background: #fef3c7;
+  border: 1px dashed #fbbf24;
+}
+
+@keyframes qaBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 加载动画 ===== */
+.qa-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.qa-loading-text {
+  font-size: 0.85rem;
+  color: #78716c;
+}
+/* 三个跳动的小点 */
+.qa-loading-dots span {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #991b1b;
+  animation: qaDotBounce 1.4s infinite ease-in-out;
+  line-height: 1;
+}
+.qa-loading-dots span:nth-child(1) { animation-delay: 0s; }
+.qa-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.qa-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes qaDotBounce {
+  0%, 80%, 100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+/* ===== 底部输入区 ===== */
+.qa-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 20px 14px;
+  border-top: 1px solid #fde68a;
+  align-items: center;
+  flex-shrink: 0;
+}
+/* 输入框 */
+.qa-input {
+  flex: 1;
+  border: 2px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+.qa-input:focus {
+  border-color: #991b1b;
+  background: white;
+}
+.qa-input:disabled {
+  background: #f5f5f5;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+/* 发送按钮 */
+.qa-send-btn {
+  background: #991b1b;
+  color: #fef3c7;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.qa-send-btn:hover {
+  background: #b91c1c;
+}
+.qa-send-btn:disabled {
+  background: #d4d4d4;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ===== 底部链接 ===== */
+.qa-footer-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px 14px;
+  flex-shrink: 0;
+}
+.qa-footer-link {
+  font-size: 0.75rem;
+  color: #991b1b;
+  text-decoration: none;
+  cursor: pointer;
+}
+.qa-footer-link:hover {
+  text-decoration: underline;
+}
+.qa-footer-disclaimer {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+/* ===== 手机端适配 ===== */
+@media (max-width: 640px) {
+  .qa-modal-content {
+    max-width: 100% !important;
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    height: 100vh;
+  }
+  .qa-header {
+    border-radius: 0;
+    padding: 12px 16px;
+  }
+  .qa-title {
+    font-size: 1.1rem;
+  }
+  .qa-chat-area {
+    padding: 12px 14px;
+    max-height: none;
+  }
+  .qa-bubble {
+    max-width: 90%;
+    font-size: 0.82rem;
+  }
+  .qa-tags-section {
+    padding: 10px 14px;
+  }
+  .qa-tag {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+  }
+  .qa-input-row {
+    padding: 8px 14px 12px;
+  }
+  .qa-input {
+    font-size: 0.82rem;
+    padding: 8px 12px;
+  }
+  .qa-send-btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+  .qa-apikey-section {
+    padding: 10px 14px;
+  }
+  .qa-apikey-row {
+    flex-direction: column;
+  }
+  .qa-apikey-btn {
+    width: 100%;
+  }
+}
+
+/* ===== 打印样式（方便用户打印八字排盘结果） ===== */
+@media print {
+  /* 隐藏导航和页脚 */
+  nav, footer, header {
+    background-color: white !important;
+    color: black !important;
+  }
+  .tab-btn { display: none; }
+  /* 背景色去掉方便打印 */
+  body {
+    background-color: white !important;
+  }
+  .result-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+}
+
+/* ========== 手相/面相 SVG 热区 ========== */
+
+/* SVG 热区层：铺满图片容器 */
+.hotspot-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 容器不拦截事件，让热区子元素可点 */
+}
+
+/* 透明可点击热区（椭圆） */
+.hotspot-area {
+  fill: rgba(220, 38, 38, 0);
+  cursor: pointer;
+  pointer-events: all;
+  transition: fill 0.2s;
+}
+.hotspot-area:hover {
+  fill: rgba(220, 38, 38, 0.08);
+}
+
+/* 数字标号圆点 */
+.hotspot-dot {
+  fill: rgba(220, 38, 38, 0.85);
+  stroke: #fff;
+  stroke-width: 2;
+  cursor: pointer;
+  pointer-events: all;
+  transition: fill 0.2s;
+}
+.hotspot-dot:hover {
+  fill: #b91c1c;
+}
+
+/* 数字文字 */
+.hotspot-label {
+  fill: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* 点击后高亮状态（变绿色） */
+.hotspot-active {
+  fill: #059669 !important;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+/* 卡片高亮 */
+.card-highlight {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
+  transform: translateY(-2px);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* 卡片上的数字标号 */
+.hotspot-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 4px;
+}

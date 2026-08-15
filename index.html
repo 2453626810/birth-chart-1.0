@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>玄学命理 — 八字·手相·面相</title>
+
+  <!-- 引入 Tailwind CSS（样式框架，通过CDN引入，不需要下载） -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 引入 lunar-javascript（农历和八字计算的核心库） -->
+  <!-- 引入 lunar-javascript（农历和八字计算的核心库） -->
+  <!-- 注意：文件名为 lunar.js 不是 lunar.min.js，这个包没有发布压缩版 -->
+  <script src="https://unpkg.com/lunar-javascript/lunar.js"></script>
+
+  <!-- 引入全局自定义样式 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-amber-50 min-h-screen">
+
+  <!-- ========== 页面顶部标题栏 ========== -->
+  <header class="bg-red-900 text-amber-100 py-6 shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-widest">玄学命理</h1>
+      <p class="mt-2 text-amber-300 text-sm md:text-base">八字排盘 · 手相解读 · 面相解读</p>
+      <p class="mt-1 text-red-400 text-xs">—— 传统文化参考，仅供娱乐 ——</p>
+    </div>
+  </header>
+
+  <!-- ========== Tab 导航栏（四个模块切换） ========== -->
+  <nav class="bg-red-800 text-amber-100 sticky top-0 z-50 shadow-md">
+    <div class="max-w-5xl mx-auto flex overflow-x-auto">
+      <!-- 每个按钮点击后切换到对应的内容区 -->
+      <button class="tab-btn active flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
+                     transition-colors duration-200 hover:bg-red-700"
+              data-tab="tab-knowledge" id="btn-knowledge">
+        📚 知识科普
+      </button>
+      <button class="tab-btn flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
+                     transition-colors duration-200 hover:bg-red-700"
+              data-tab="tab-bazi" id="btn-bazi">
+        🎯 八字排盘
+      </button>
+      <button class="tab-btn flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
+                     transition-colors duration-200 hover:bg-red-700"
+              data-tab="tab-palm" id="btn-palm">
+        ✋ 手相
+      </button>
+      <button class="tab-btn flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
+                     transition-colors duration-200 hover:bg-red-700"
+              data-tab="tab-face" id="btn-face">
+        😊 面相
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== 主内容区 ========== -->
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- ===== Tab 1：知识科普 ===== -->
+    <section id="tab-knowledge" class="tab-content">
+      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">📚 基础知识科普</h2>
+      <p class="text-center text-gray-600 mb-8">了解这些基础概念，再看自己的八字就不懵啦~</p>
+
+      <!-- 八字基础知识 -->
+      <div class="grid md:grid-cols-2 gap-6 mb-10">
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">🔟 什么是天干？</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            天干有10个：<strong>甲、乙、丙、丁、戊、己、庚、辛、壬、癸</strong>。
+            你可以把它们理解为"天上"的标记，用来记录年份、月份、日子和时辰。
+            每个天干都有自己的五行属性（金木水火土）和阴阳属性。
+          </p>
+          <div class="mt-3 flex flex-wrap gap-1">
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">甲木🌳</span>
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">乙木🌿</span>
+            <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">丙火🔥</span>
+            <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">丁火🕯️</span>
+            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">戊土⛰️</span>
+            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">己土🪨</span>
+            <span class="px-2 py-1 bg-slate-200 text-slate-800 rounded text-xs">庚金⚔️</span>
+            <span class="px-2 py-1 bg-slate-200 text-slate-800 rounded text-xs">辛金💍</span>
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">壬水🌊</span>
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">癸水💧</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">🐭 什么是地支？</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            地支有12个：<strong>子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥</strong>。
+            每个地支对应一个生肖和一天中的一个时辰（2小时）。
+            比如"子"是老鼠🐭，对应半夜23点到凌晨1点。
+          </p>
+          <div class="mt-3 flex flex-wrap gap-1 text-xs">
+            <span class="px-2 py-1 bg-blue-100 rounded">子🐭水</span>
+            <span class="px-2 py-1 bg-yellow-100 rounded">丑🐮土</span>
+            <span class="px-2 py-1 bg-green-100 rounded">寅🐯木</span>
+            <span class="px-2 py-1 bg-green-100 rounded">卯🐰木</span>
+            <span class="px-2 py-1 bg-yellow-100 rounded">辰🐲土</span>
+            <span class="px-2 py-1 bg-red-100 rounded">巳🐍火</span>
+            <span class="px-2 py-1 bg-red-100 rounded">午🐴火</span>
+            <span class="px-2 py-1 bg-yellow-100 rounded">未🐑土</span>
+            <span class="px-2 py-1 bg-slate-200 rounded">申🐵金</span>
+            <span class="px-2 py-1 bg-slate-200 rounded">酉🐔金</span>
+            <span class="px-2 py-1 bg-yellow-100 rounded">戌🐶土</span>
+            <span class="px-2 py-1 bg-blue-100 rounded">亥🐷水</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">🔥💧🪵⛰️⚔️ 五行生克</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            五行指<strong>金、木、水、火、土</strong>五种"气"。
+            它们之间有两种关系：
+          </p>
+          <ul class="mt-2 text-sm text-gray-700 space-y-1">
+            <li>✅ <strong>相生（好的帮助）</strong>：木生火 → 火生土 → 土生金 → 金生水 → 水生木</li>
+            <li>⚠️ <strong>相克（制约关系）</strong>：木克土 → 土克水 → 水克火 → 火克金 → 金克木</li>
+          </ul>
+          <p class="mt-2 text-xs text-gray-500">💡 打个比方：木头能让火烧得更旺（木生火），水能把火浇灭（水克火）。</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">📅 什么是八字？</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            <strong>八字</strong>就是把你出生的<strong>年、月、日、时</strong>，分别用天干+地支来表示，
+            一共4组×2个字=<strong>8个字</strong>，所以叫"八字"。
+            比如一个人出生在 2000年1月1日中午12点，经过换算后可能是：<strong>戊午 甲子 戊午 戊午</strong>。
+            这8个字就是你的"命盘"，代表你出生那一刻的天地能量状态。
+          </p>
+        </div>
+      </div>
+
+      <!-- 六十甲子与纳音 -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">🔢 什么是六十甲子？</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            把10个天干和12个地支按顺序配对（甲子、乙丑、丙寅…），
+            总共能组合出<strong>60种</strong>不同的搭配，这就是"六十甲子"。
+            古人用它来标记年、月、日、时，60年为一个循环周期，
+            所以人活到60岁叫"花甲之年"。
+          </p>
+          <p class="mt-2 text-xs text-gray-500">
+            💡 每个六十甲子组合还有一个好听的名字叫"纳音"，比如甲子=海中金、丙寅=炉中火。
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
+          <h3 class="text-lg font-bold text-red-800 mb-3">🏷️ 什么是十神？</h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            <strong>十神</strong>是以八字中的"日干"（代表自己）为中心，
+            看其他天干和自己是什么关系。总共有10种：
+          </p>
+          <ul class="mt-2 text-sm text-gray-700 space-y-0.5">
+            <li>🤝 <strong>比肩/劫财</strong>：和我同类的（朋友、兄弟姐妹、同事）</li>
+            <li>🍽️ <strong>食神/伤官</strong>：我生的（才华、表达、创造力）</li>
+            <li>💰 <strong>正财/偏财</strong>：我克的（财富、资源、父亲）</li>
+            <li>⚖️ <strong>正官/七杀</strong>：克我的（规则、压力、上司、丈夫）</li>
+            <li>📚 <strong>正印/偏印</strong>：生我的（学习、帮助、母亲、贵人）</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 五行对照表 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h3 class="text-lg font-bold text-red-800 mb-3">📊 五行万物对照表</h3>
+        <p class="text-sm text-gray-600 mb-3">五行不只是"五种元素"，古人把万物都归入五行体系：</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-center border-collapse">
+            <thead>
+              <tr class="bg-red-800 text-amber-100">
+                <th class="p-2 border border-amber-400">五行</th>
+                <th class="p-2 border border-amber-400">方位</th>
+                <th class="p-2 border border-amber-400">颜色</th>
+                <th class="p-2 border border-amber-400">季节</th>
+                <th class="p-2 border border-amber-400">五脏</th>
+                <th class="p-2 border border-amber-400">情绪</th>
+                <th class="p-2 border border-amber-400">味道</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-green-50">
+                <td class="p-2 border border-amber-300 font-bold text-green-700">木</td>
+                <td class="p-2 border border-amber-300">东方</td>
+                <td class="p-2 border border-amber-300">青色</td>
+                <td class="p-2 border border-amber-300">春天</td>
+                <td class="p-2 border border-amber-300">肝</td>
+                <td class="p-2 border border-amber-300">怒</td>
+                <td class="p-2 border border-amber-300">酸</td>
+              </tr>
+              <tr class="bg-red-50">
+                <td class="p-2 border border-amber-300 font-bold text-red-700">火</td>
+                <td class="p-2 border border-amber-300">南方</td>
+                <td class="p-2 border border-amber-300">红色</td>
+                <td class="p-2 border border-amber-300">夏天</td>
+                <td class="p-2 border border-amber-300">心</td>
+                <td class="p-2 border border-amber-300">喜</td>
+                <td class="p-2 border border-amber-300">苦</td>
+              </tr>
+              <tr class="bg-yellow-50">
+                <td class="p-2 border border-amber-300 font-bold text-yellow-700">土</td>
+                <td class="p-2 border border-amber-300">中央</td>
+                <td class="p-2 border border-amber-300">黄色</td>
+                <td class="p-2 border border-amber-300">长夏</td>
+                <td class="p-2 border border-amber-300">脾</td>
+                <td class="p-2 border border-amber-300">思</td>
+                <td class="p-2 border border-amber-300">甜</td>
+              </tr>
+              <tr class="bg-slate-100">
+                <td class="p-2 border border-amber-300 font-bold text-slate-700">金</td>
+                <td class="p-2 border border-amber-300">西方</td>
+                <td class="p-2 border border-amber-300">白色</td>
+                <td class="p-2 border border-amber-300">秋天</td>
+                <td class="p-2 border border-amber-300">肺</td>
+                <td class="p-2 border border-amber-300">悲</td>
+                <td class="p-2 border border-amber-300">辣</td>
+              </tr>
+              <tr class="bg-blue-50">
+                <td class="p-2 border border-amber-300 font-bold text-blue-700">水</td>
+                <td class="p-2 border border-amber-300">北方</td>
+                <td class="p-2 border border-amber-300">黑/蓝色</td>
+                <td class="p-2 border border-amber-300">冬天</td>
+                <td class="p-2 border border-amber-300">肾</td>
+                <td class="p-2 border border-amber-300">恐</td>
+                <td class="p-2 border border-amber-300">咸</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 手相基础知识 -->
+      <h3 class="text-xl font-bold text-red-900 mb-4">✋ 手相基础知识</h3>
+
+      <!-- 三大主线 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">📏 三大主线</h4>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-green-50 rounded-lg p-3">
+            <p class="font-bold text-green-800">🧬 生命线</p>
+            <p class="text-gray-600 mt-1">从虎口出发绕过大拇指根部。代表<strong>生命力和健康状态</strong>，<em>不是看寿命长短</em>。线越长越清晰，代表精力越旺盛。</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3">
+            <p class="font-bold text-blue-800">🧠 智慧线</p>
+            <p class="text-gray-600 mt-1">手掌中间横穿的线。代表<strong>思维方式和学习能力</strong>。线条深长直代表逻辑思维强，线条弯垂代表想象力丰富。</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-3">
+            <p class="font-bold text-red-800">💕 感情线</p>
+            <p class="text-gray-600 mt-1">从小指下方出发的横线。代表<strong>感情态度和人际关系</strong>。线长到食指下方代表感情丰富，线短到中指下方代表理性务实。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 掌丘分布 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">⛰️ 七大掌丘</h4>
+        <p class="text-sm text-gray-600 mb-3">手掌上各处隆起的肉垫叫"掌丘"，以星体命名，每个丘代表不同的人生领域：</p>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🪐 金星丘（大拇指根部）</p>
+            <p class="text-gray-600">代表爱情、魅力和生命力。饱满有弹性代表热情有活力。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🪵 木星丘（食指下方）</p>
+            <p class="text-gray-600">代表野心、领导力和自信心。饱满代表有上进心。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🪨 土星丘（中指下方）</p>
+            <p class="text-gray-600">代表责任感、沉稳和孤独。适中为佳，过高可能过于严肃。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">☀️ 太阳丘（无名指下方）</p>
+            <p class="text-gray-600">代表艺术天赋、名声和成功。饱满代表有创造力和表现欲。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">💧 水星丘（小指下方）</p>
+            <p class="text-gray-600">代表沟通能力、商业头脑。饱满代表口才好、善于交际。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🌙 太阴丘（手掌外侧下部）</p>
+            <p class="text-gray-600">代表想象力、直觉和潜意识。饱满代表想象力丰富。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 五指五行 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">🖐️ 五指对应的五行</h4>
+        <div class="grid grid-cols-5 gap-2 text-center text-sm">
+          <div class="bg-yellow-50 rounded-lg p-2">
+            <p class="text-2xl">👍</p>
+            <p class="font-bold text-yellow-700">拇指</p>
+            <p class="text-xs text-gray-500">属土</p>
+            <p class="text-xs text-gray-500">代表意志力</p>
+          </div>
+          <div class="bg-green-50 rounded-lg p-2">
+            <p class="text-2xl">☝️</p>
+            <p class="font-bold text-green-700">食指</p>
+            <p class="text-xs text-gray-500">属木</p>
+            <p class="text-xs text-gray-500">代表进取心</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-2">
+            <p class="text-2xl">🖕</p>
+            <p class="font-bold text-red-700">中指</p>
+            <p class="text-xs text-gray-500">属火</p>
+            <p class="text-xs text-gray-500">代表责任感</p>
+          </div>
+          <div class="bg-slate-100 rounded-lg p-2">
+            <p class="text-2xl">💍</p>
+            <p class="font-bold text-slate-700">无名指</p>
+            <p class="text-xs text-gray-500">属金</p>
+            <p class="text-xs text-gray-500">代表艺术感</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-2">
+            <p class="text-2xl">🤙</p>
+            <p class="font-bold text-blue-700">小指</p>
+            <p class="text-xs text-gray-500">属水</p>
+            <p class="text-xs text-gray-500">代表沟通力</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 左右手区别 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-2">🙌 左右手的区别</h4>
+        <p class="text-gray-700 text-sm leading-relaxed">
+          传统上常说"男左女右"，但更完整的说法是：
+          <strong>左手代表先天</strong>（遗传、天赋、命定的东西），
+          <strong>右手代表后天</strong>（自己努力改变的东西，常用手）。
+          所以看手相时两只手都要看，左手看"命"，右手看"运"，对比之下可以看出一个人后天有多努力。
+        </p>
+      </div>
+
+      <!-- 面相基础知识 -->
+      <h3 class="text-xl font-bold text-red-900 mb-4">😊 面相基础知识</h3>
+
+      <!-- 三停 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">📐 三停：脸上三个年龄阶段</h4>
+        <p class="text-sm text-gray-600 mb-3">古人把脸从上到下分为三段，分别对应人生的不同阶段：</p>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-blue-50 rounded-lg p-3">
+            <p class="font-bold text-blue-800">🧠 上停（额头）</p>
+            <p class="text-gray-600 mt-1"><strong>15-30岁运程</strong>。看早年运势、祖上根基、智慧天赋。额头饱满、光滑代表少年得志。</p>
+          </div>
+          <div class="bg-red-50 rounded-lg p-3">
+            <p class="font-bold text-red-800">👃 中停（眉→鼻尖）</p>
+            <p class="text-gray-600 mt-1"><strong>31-50岁运程</strong>。看中年成就、人际关系、财富积累。鼻梁挺拔、眉清目秀代表中年发达。</p>
+          </div>
+          <div class="bg-yellow-50 rounded-lg p-3">
+            <p class="font-bold text-yellow-800">👄 下停（鼻尖→下巴）</p>
+            <p class="text-gray-600 mt-1"><strong>51岁以后运程</strong>。看晚年福气、家庭关系、最终归宿。下巴圆润、人中深长代表晚年有福。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 五官详解 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">👁️ 五官：脸上的五位"官"</h4>
+        <p class="text-sm text-gray-600 mb-3">古人把五官比作五种"官位"，各有职守：</p>
+        <div class="space-y-3 text-sm">
+          <div class="flex gap-3 items-start bg-amber-50 rounded-lg p-3">
+            <span class="text-2xl">👁️</span>
+            <div>
+              <p class="font-bold text-red-800">眉 — 保寿官</p>
+              <p class="text-gray-600">眉毛代表<strong>健康寿命和人际关系</strong>。眉形清秀、长短适中代表健康良好、人缘不错。眉毛杂乱或过于稀疏则提示多注意身体健康。</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-amber-50 rounded-lg p-3">
+            <span class="text-2xl">👀</span>
+            <div>
+              <p class="font-bold text-red-800">眼 — 监察官</p>
+              <p class="text-gray-600">眼睛代表<strong>判断力和智慧</strong>。眼神清澈有光代表明辨是非、心地纯良。眼睛是面相中最重要的部位，"一身精神，具乎两目"。</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-amber-50 rounded-lg p-3">
+            <span class="text-2xl">👃</span>
+            <div>
+              <p class="font-bold text-red-800">鼻 — 审辨官</p>
+              <p class="text-gray-600">鼻子代表<strong>财运和自我意识</strong>。鼻梁挺拔、鼻头有肉代表财运不错、有主见。鼻子又叫"面王"，是一脸之主。</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-amber-50 rounded-lg p-3">
+            <span class="text-2xl">👄</span>
+            <div>
+              <p class="font-bold text-red-800">口 — 出纳官</p>
+              <p class="text-gray-600">嘴巴代表<strong>口才和晚年运势</strong>。嘴角上扬、唇色红润代表说话得体、信守承诺。嘴唇薄的人往往口才更好但可能不够厚道。</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-amber-50 rounded-lg p-3">
+            <span class="text-2xl">👂</span>
+            <div>
+              <p class="font-bold text-red-800">耳 — 采听官</p>
+              <p class="text-gray-600">耳朵代表<strong>少年运势和肾气</strong>。耳垂大而厚代表有福气（你看佛像的耳垂都很大）。耳朵在面相中主1-14岁的童年运。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 重要部位 -->
+      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
+        <h4 class="font-bold text-red-800 mb-3">📍 其他重要部位</h4>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🔴 印堂（两眉之间）</p>
+            <p class="text-gray-600">主<strong>近期运势和心胸</strong>。印堂开阔明亮代表最近气运顺畅、心情开朗。"印堂发黑"这句俗语就是从这里来的。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">🦴 颧骨</p>
+            <p class="text-gray-600">主<strong>权力和事业</strong>。颧骨高而有肉包裹代表有领导力。但颧骨过高无肉则可能过于强势。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">〰️ 人中</p>
+            <p class="text-gray-600">鼻子和嘴唇之间的凹槽，主<strong>健康和生育</strong>。人中深长清晰代表身体健康、生命力强。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-3">
+            <p class="font-bold">📏 法令纹</p>
+            <p class="text-gray-600">从鼻翼两侧向下延伸的纹路，主<strong>权威和晚年运势</strong>。中年以后出现、深而对称者为佳。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tab 2：八字排盘 ===== -->
+    <section id="tab-bazi" class="tab-content hidden">
+      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">🎯 八字排盘</h2>
+
+      <!-- 输入表单 -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-amber-300 max-w-lg mx-auto">
+        <h3 class="text-lg font-bold text-red-800 mb-4">请输入你的出生信息</h3>
+
+        <!-- 出生日期 -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">📅 出生日期（公历）</label>
+          <input type="date" id="birth-date"
+                 class="w-full border border-amber-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                 value="2000-01-01">
+        </div>
+
+        <!-- 出生时辰（古代时辰名 + 24小时制对照） -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">⏰ 出生时辰</label>
+          <select id="birth-hour"
+                  class="w-full border border-amber-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500">
+            <option value="0">子时（23:00 - 01:00）</option>
+            <option value="1">丑时（01:00 - 03:00）</option>
+            <option value="2">寅时（03:00 - 05:00）</option>
+            <option value="3">卯时（05:00 - 07:00）</option>
+            <option value="4">辰时（07:00 - 09:00）</option>
+            <option value="5">巳时（09:00 - 11:00）</option>
+            <option value="6" selected>午时（11:00 - 13:00）</option>
+            <option value="7">未时（13:00 - 15:00）</option>
+            <option value="8">申时（15:00 - 17:00）</option>
+            <option value="9">酉时（17:00 - 19:00）</option>
+            <option value="10">戌时（19:00 - 21:00）</option>
+            <option value="11">亥时（21:00 - 23:00）</option>
+          </select>
+        </div>
+
+        <!-- 性别 -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">👤 性别</label>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="gender" value="male" checked class="accent-red-700">
+              <span class="text-sm">男</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="gender" value="female" class="accent-red-700">
+              <span class="text-sm">女</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 排盘按钮 -->
+        <button onclick="calculateBazi()"
+                class="w-full bg-red-800 text-amber-100 py-3 rounded-lg font-bold text-lg
+                       hover:bg-red-700 transition-colors duration-200 shadow-md disabled:opacity-50 disabled:cursor-wait"
+                id="btn-calc">
+          🔮 开始排盘
+        </button>
+
+        <p class="text-xs text-gray-400 text-center mt-3">
+          点击排盘后，结果会显示在下方
+        </p>
+      </div>
+
+      <!-- 排盘结果展示区（初始为空，点击排盘后填充内容） -->
+      <div id="bazi-result" class="mt-8 hidden">
+        <!-- 排盘结果会由 bazi.js 动态填充到这里 -->
+      </div>
+    </section>
+
+    <!-- ===== Tab 3：手相解读 ===== -->
+    <section id="tab-palm" class="tab-content hidden">
+      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">✋ 手相解读</h2>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-amber-300">
+        <!-- 拍照分析按钮 -->
+        <div class="text-center mb-4">
+          <button onclick="startAnalysis('palm')" class="bg-red-700 text-white rounded-lg px-6 py-3 font-bold hover:bg-red-800 transition-colors shadow">
+            📷 拍照分析我的手相
+          </button>
+          <p class="text-xs text-gray-400 mt-1">拍照或上传手掌照片，AI 帮你分析</p>
+        </div>
+
+        <!-- 手掌示意图（AI 生成） -->
+        <div id="palm-container" class="relative mx-auto bg-white rounded-xl p-2" style="max-width:400px;">
+          <img src="img/palm-ai.png" alt="手掌示意图" class="w-full h-auto rounded-lg border border-amber-100">
+          <p class="text-xs text-gray-400 text-center mt-2">示意图由 AI 生成，图中数字标号对应下方知识卡片</p>
+        </div>
+
+        <!-- 手相知识卡片（点击弹窗查看详解） -->
+        <h4 class="font-bold text-red-800 mt-6">📏 主要线纹</h4>
+        <div class="grid md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('life-line')">
+            <h4 class="font-bold text-red-800">🧬 生命线</h4>
+            <p class="text-sm text-gray-600 mt-1">从虎口出发，绕过大拇指根部的弧线。代表生命力和健康状态。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('head-line')">
+            <h4 class="font-bold text-red-800">🧠 智慧线</h4>
+            <p class="text-sm text-gray-600 mt-1">手掌中间横穿的线。代表思维方式、学习能力和判断力。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('heart-line')">
+            <h4 class="font-bold text-red-800">💕 感情线</h4>
+            <p class="text-sm text-gray-600 mt-1">从手掌外侧小指下方出发的横线。代表感情态度和人际关系。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('fate-line')">
+            <h4 class="font-bold text-red-800">📈 命运线（事业线）</h4>
+            <p class="text-sm text-gray-600 mt-1">从手掌底部向上延伸的竖线。代表事业发展方向和人生轨迹。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('marriage-line')">
+            <h4 class="font-bold text-red-800">💍 婚姻线</h4>
+            <p class="text-sm text-gray-600 mt-1">小指下方、感情线上方的短小横线。代表感情关系和婚姻状态。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('sun-line')">
+            <h4 class="font-bold text-red-800">☀️ 太阳线（成功线）</h4>
+            <p class="text-sm text-gray-600 mt-1">无名指下方纵向延伸。代表艺术才华、名声和成功运势。</p>
+          </div>
+        </div>
+
+        <!-- 掌丘（七丘） -->
+        <h4 class="font-bold text-red-800 pt-4">⛰️ 掌丘（七丘）</h4>
+        <div class="grid md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-venus')">
+            <h4 class="font-bold text-red-800">💖 金星丘（土）</h4>
+            <p class="text-sm text-gray-600 mt-1">大拇指根部隆起的肉垫。代表爱情、魅力和生命力。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-jupiter')">
+            <h4 class="font-bold text-red-800">👑 木星丘（木）</h4>
+            <p class="text-sm text-gray-600 mt-1">食指下方隆起的区域。代表野心、领导力和自信。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-saturn')">
+            <h4 class="font-bold text-red-800">⛰️ 土星丘（土）</h4>
+            <p class="text-sm text-gray-600 mt-1">中指下方隆起的区域。代表责任感和沉稳。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-sun')">
+            <h4 class="font-bold text-red-800">☀️ 太阳丘（火）</h4>
+            <p class="text-sm text-gray-600 mt-1">无名指下方隆起的区域。代表艺术天赋和成功运。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-mercury')">
+            <h4 class="font-bold text-red-800">💬 水星丘（水）</h4>
+            <p class="text-sm text-gray-600 mt-1">小指下方隆起的区域。代表沟通能力和商业头脑。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-mars')">
+            <h4 class="font-bold text-red-800">⚔️ 火星丘（火）</h4>
+            <p class="text-sm text-gray-600 mt-1">虎口和手掌边缘之间。代表勇气和斗志。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('mount-lunar')">
+            <h4 class="font-bold text-red-800">🌙 太阴丘（水）</h4>
+            <p class="text-sm text-gray-600 mt-1">手掌外侧下部。代表想象力、直觉和潜意识。</p>
+          </div>
+        </div>
+
+        <!-- 五指 -->
+        <h4 class="font-bold text-red-800 pt-4">🖐️ 五指</h4>
+        <div class="grid md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('finger-thumb')">
+            <h4 class="font-bold text-red-800">👍 拇指（土）</h4>
+            <p class="text-sm text-gray-600 mt-1">代表意志力和决断力。粗壮有力代表有主见。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('finger-index')">
+            <h4 class="font-bold text-red-800">☝️ 食指（木）</h4>
+            <p class="text-sm text-gray-600 mt-1">代表进取心和野心。较长代表有追求。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('finger-middle')">
+            <h4 class="font-bold text-red-800">🖐️ 中指（火）</h4>
+            <p class="text-sm text-gray-600 mt-1">代表责任感和节制能力。较长代表有责任心。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('finger-ring')">
+            <h4 class="font-bold text-red-800">💍 无名指（金）</h4>
+            <p class="text-sm text-gray-600 mt-1">代表艺术感和名声。较长代表有艺术天赋。</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('finger-little')">
+            <h4 class="font-bold text-red-800">🤙 小指（水）</h4>
+            <p class="text-sm text-gray-600 mt-1">代表沟通和表达能力。较长代表口才好。</p>
+          </div>
+        </div>
+
+        <!-- 左右手区别 -->
+        <h4 class="font-bold text-red-800 pt-4">🙌 左右手区别</h4>
+        <div class="grid md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+               onclick="showPalmInfo('hand-diff')">
+            <h4 class="font-bold text-red-800">🙌 左右手区别</h4>
+            <p class="text-sm text-gray-600 mt-1">左手看先天，右手看后天。两只手对比能看到后天的努力。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tab 4：面相解读 ===== -->
+    <section id="tab-face" class="tab-content hidden">
+      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">😊 面相解读</h2>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-amber-300">
+        <!-- 拍照分析按钮 -->
+        <div class="text-center mb-4">
+          <button onclick="startAnalysis('face')" class="bg-red-700 text-white rounded-lg px-6 py-3 font-bold hover:bg-red-800 transition-colors shadow">
+            📷 拍照分析我的面相
+          </button>
+          <p class="text-xs text-gray-400 mt-1">拍照或上传面部照片，AI 帮你分析</p>
+        </div>
+
+        <!-- 面部示意图（AI 生成） -->
+        <div id="face-container" class="relative mx-auto bg-white rounded-xl p-2" style="max-width:400px;">
+          <img src="img/face-ai.png" alt="面相示意图" class="w-full h-auto rounded-lg border border-amber-100">
+          <p class="text-xs text-gray-400 text-center mt-2">示意图由 AI 生成，图中数字标号对应下方知识卡片</p>
+        </div>
+
+        <!-- 面相知识卡片（点击弹窗查看详解） -->
+        <div class="space-y-4 mt-6">
+          <!-- 三停 -->
+          <h4 class="font-bold text-red-800">📐 三停分区</h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('upper')">
+              <h4 class="font-bold text-red-800">🧠 上停（额头）</h4>
+              <p class="text-sm text-gray-600 mt-1">15-30岁运程。看早年运势、祖上根基、智慧天赋。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('middle')">
+              <h4 class="font-bold text-red-800">👃 中停（眉眼鼻）</h4>
+              <p class="text-sm text-gray-600 mt-1">31-50岁运程。看中年成就、人际关系、财富积累。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-4 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('lower')">
+              <h4 class="font-bold text-red-800">👄 下停（口下巴）</h4>
+              <p class="text-sm text-gray-600 mt-1">51岁以后运程。看晚年福气、家庭关系、最终归宿。</p>
+            </div>
+          </div>
+
+          <!-- 五官 -->
+          <h4 class="font-bold text-red-800 pt-2">👁️ 五官</h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('eyebrows')">
+              <h4 class="font-bold text-red-800">🤨 眉 — 保寿官（木）</h4>
+              <p class="text-sm text-gray-600 mt-1">看健康寿命、人际关系和兄弟朋友运。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('eyes')">
+              <h4 class="font-bold text-red-800">👀 眼 — 监察官（火）</h4>
+              <p class="text-sm text-gray-600 mt-1">看判断力、智慧和心地。面相中最重要的部位。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('nose')">
+              <h4 class="font-bold text-red-800">👃 鼻 — 审辨官（土）</h4>
+              <p class="text-sm text-gray-600 mt-1">看财运和自我意识。"面王"之位，一脸之主。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('mouth')">
+              <h4 class="font-bold text-red-800">👄 口 — 出纳官（水）</h4>
+              <p class="text-sm text-gray-600 mt-1">看口才、诚信和晚年运势。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('ears')">
+              <h4 class="font-bold text-red-800">👂 耳 — 采听官（水）</h4>
+              <p class="text-sm text-gray-600 mt-1">看少年运势（1-14岁）和肾气。耳垂大代表有福气。</p>
+            </div>
+          </div>
+
+          <!-- 重点部位 -->
+          <h4 class="font-bold text-red-800 pt-2">📍 重点部位</h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('yintang')">
+              <h4 class="font-bold text-red-800">🔴 印堂</h4>
+              <p class="text-sm text-gray-600 mt-1">两眉之间。看近期运势和心胸。印堂开阔代表运气好。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('cheekbones')">
+              <h4 class="font-bold text-red-800">🦴 颧骨</h4>
+              <p class="text-sm text-gray-600 mt-1">眼下鼻侧。看权力和事业运。高而有肉代表有领导力。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('philtrum')">
+              <h4 class="font-bold text-red-800">〰️ 人中</h4>
+              <p class="text-sm text-gray-600 mt-1">鼻唇之间的凹槽。看健康和生育能力。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('nasolabial')">
+              <h4 class="font-bold text-red-800">📏 法令纹</h4>
+              <p class="text-sm text-gray-600 mt-1">鼻翼两侧向下延伸的纹路。看权威和晚年运势。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('chin')">
+              <h4 class="font-bold text-red-800">👤 地阁（下巴）</h4>
+              <p class="text-sm text-gray-600 mt-1">脸部最下方。看晚年福气和根基。地阁方圆代表有福。</p>
+            </div>
+          </div>
+
+          <!-- 十二宫 -->
+          <h4 class="font-bold text-red-800 pt-2">🏛️ 十二宫</h4>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-ming')">
+              <h4 class="font-bold text-red-800">🎯 命宫</h4>
+              <p class="text-sm text-gray-600 mt-1">两眉之间。主一生运势总纲和近期吉凶。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-caibo')">
+              <h4 class="font-bold text-red-800">💰 财帛宫</h4>
+              <p class="text-sm text-gray-600 mt-1">鼻头（准头）。主财运和理财能力。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-xiongdi')">
+              <h4 class="font-bold text-red-800">👫 兄弟宫</h4>
+              <p class="text-sm text-gray-600 mt-1">两眉。主兄弟姐妹缘分和人际关系。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-tianzhai')">
+              <h4 class="font-bold text-red-800">🏠 田宅宫</h4>
+              <p class="text-sm text-gray-600 mt-1">眉与眼之间。主家产、房产和祖业。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-nannv')">
+              <h4 class="font-bold text-red-800">👶 男女宫</h4>
+              <p class="text-sm text-gray-600 mt-1">眼下卧蚕。主子女生育。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-nupu')">
+              <h4 class="font-bold text-red-800">👥 奴仆宫</h4>
+              <p class="text-sm text-gray-600 mt-1">下巴两侧。主下属和晚年人缘。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-qiqie')">
+              <h4 class="font-bold text-red-800">💞 妻妾宫</h4>
+              <p class="text-sm text-gray-600 mt-1">眼尾鱼尾处。主婚姻感情。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-jie')">
+              <h4 class="font-bold text-red-800">🩺 疾厄宫</h4>
+              <p class="text-sm text-gray-600 mt-1">山根（两眼间鼻梁）。主健康。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-qianyi')">
+              <h4 class="font-bold text-red-800">🧭 迁移宫</h4>
+              <p class="text-sm text-gray-600 mt-1">额头两侧。主出行和外地发展。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-guanlu')">
+              <h4 class="font-bold text-red-800">💼 官禄宫</h4>
+              <p class="text-sm text-gray-600 mt-1">额头正中。主事业和名声。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-fude')">
+              <h4 class="font-bold text-red-800">🍀 福德宫</h4>
+              <p class="text-sm text-gray-600 mt-1">额头两侧上方。主福分和德行。</p>
+            </div>
+            <div class="bg-amber-50 rounded-lg p-3 border border-amber-200 cursor-pointer hover:shadow-md transition-shadow"
+                 onclick="showFaceInfo('palace-xiangmao')">
+              <h4 class="font-bold text-red-800">👤 相貌宫</h4>
+              <p class="text-sm text-gray-600 mt-1">整个面部。看五官三停整体协调。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 页脚免责声明 ========== -->
+  <footer class="bg-red-900 text-amber-100 py-6 mt-12">
+    <div class="max-w-5xl mx-auto px-4 text-center text-sm">
+      <p class="font-bold mb-2">⚠️ 免责声明</p>
+      <p class="text-red-300 text-xs leading-relaxed">
+        本网站所有内容仅供传统文化参考与娱乐，请勿作为人生决策依据。
+        算命不是科学，命运掌握在自己手中。
+        八字算法基于开源库 lunar-javascript 计算，命理分析基于《渊海子平》《三命通会》《麻衣神相》等公版古籍整理。
+      </p>
+    </div>
+  </footer>
+
+  <!-- 引入主入口 JS（控制Tab切换等全局逻辑） -->
+  <script src="js/main.js"></script>
+  <!-- 引入八字计算 JS -->
+  <script src="js/bazi.js"></script>
+  <!-- 引入手相 JS -->
+  <script src="js/palm.js"></script>
+  <!-- 引入面相 JS -->
+  <script src="js/face.js"></script>
+  <!-- 引入 AI 智能问答 JS（基于 DeepSeek API，八字排盘后可提问） -->
+  <script src="js/qa.js"></script>
+  <!-- 引入 Gemini 拍照分析 JS（手相/面相拍照上传后 AI 看图分析） -->
+  <script src="js/gemini.js"></script>
+</body>
+</html>

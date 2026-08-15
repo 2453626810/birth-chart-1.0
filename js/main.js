@@ -1,0 +1,45 @@
+/**
+ * main.js — 主入口文件
+ * 负责：Tab切换控制、全局初始化
+ */
+
+// 页面加载完成后执行初始化
+document.addEventListener('DOMContentLoaded', function () {
+  initTabs();
+});
+
+/**
+ * 初始化Tab切换功能
+ * 点击导航按钮时，显示对应的内容区，隐藏其他内容区
+ */
+function initTabs() {
+  // 获取所有Tab按钮
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  // 获取所有Tab内容区
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  // 给每个按钮绑定点击事件
+  tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      // 获取这个按钮要显示哪个内容区（data-tab 属性）
+      const targetTab = this.getAttribute('data-tab');
+
+      // 1. 移除所有按钮的 active 样式
+      tabBtns.forEach(function (b) {
+        b.classList.remove('active');
+      });
+      // 2. 给当前点击的按钮加上 active 样式
+      this.classList.add('active');
+
+      // 3. 隐藏所有内容区
+      tabContents.forEach(function (content) {
+        content.classList.add('hidden');
+      });
+      // 4. 显示目标内容区
+      const targetContent = document.getElementById(targetTab);
+      if (targetContent) {
+        targetContent.classList.remove('hidden');
+      }
+    });
+  });
+}
