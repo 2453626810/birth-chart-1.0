@@ -957,8 +957,8 @@ function handleSend() {
       addBotMessage(reply);
       addMessage('assistant', reply);
       saveConversationHistory(currentResult);  // 保存 AI 回复
-      // 上报问答记录到后端（问题 + 回答）
-      reportRecord({ type: 'qa', question: userInput, answer: reply });
+      // 上报问答记录到后端（问题 + 回答，归到当前排盘会话）
+      reportRecord({ type: 'qa', sessionId: currentSessionId, question: userInput, answer: reply });
       setInputEnabled(true);
       inputEl.focus();
     })

@@ -775,10 +775,14 @@ function calculateBazi() {
   // 第20步：渲染所有结果到页面上
   renderBaziResult(result);
 
+  // 生成一个新的会话 ID，用于把本次排盘和后续 AI 问答关联到同一会话
+  currentSessionId = Date.now() + '-' + Math.floor(Math.random() * 100000);
+
   // 上报查询记录到后端（后端没启动则静默失败，不影响使用）
   var hourNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
   reportRecord({
     type: 'bazi',
+    sessionId: currentSessionId,
     birthDate: dateInput,
     birthHourLabel: hourNames[hourIndex] || '',
     genderLabel: gender === 1 ? '男' : '女',

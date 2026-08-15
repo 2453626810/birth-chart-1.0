@@ -23,6 +23,10 @@
     .record .time { font-size: 12px; color: #94a3b8; }
     .record .content { font-size: 14px; line-height: 1.7; color: #334155; }
     .record .content .label { color: #64748b; font-size: 13px; }
+    .qa-block { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
+    .qa-item { background: #f8fafc; border-radius: 8px; padding: 8px 10px; margin-top: 6px; }
+    .qa-q { color: #1e40af; margin-bottom: 4px; }
+    .qa-a { color: #334155; }
     .empty { text-align: center; color: #94a3b8; padding: 60px 0; font-size: 14px; }
   </style>
 </head>
@@ -45,7 +49,7 @@
       fetch('/api/records')
         .then(function (r) { return r.json(); })
         .then(function (records) {
-          document.getElementById('count').textContent = '共 ' + records.length + ' 条记录';
+          document.getElementById('count').textContent = '共 ' + records.length + ' 个会话';
           var list = document.getElementById('list');
           if (!records.length) {
             list.innerHTML = '<div class="empty">还没有任何查询记录，去网站排一次八字试试吧～</div>';
@@ -85,6 +89,18 @@
         if (r.birthDate) html += '<div><span class="label">出生：</span>' + esc(r.birthDate) + '　' + esc(r.birthHourLabel || '') + '　' + esc(r.genderLabel || '') + '</div>';
         if (r.pillars) html += '<div><span class="label">四柱：</span>' + esc(r.pillars) + '</div>';
         if (r.wuxing) html += '<div><span class="label">五行：</span>' + esc(r.wuxing) + '</div>';
+        // 显示该会话关联的 AI 问答（同一个人的排盘 + 他问的问题放在一起）
+        if (r.qa && r.qa.length) {
+          html += '<div class="qa-block">';
+          html += '<div class="label">💬 AI 问答（' + r.qa.length + ' 条）：</div>';
+          for (var qi = 0; qi < r.qa.length; qi++) {
+            html += '<div class="qa-item">';
+            html += '<div class="qa-q">问：' + esc(r.qa[qi].question) + '</div>';
+            html += '<div class="qa-a">答：' + esc(r.qa[qi].answer) + '</div>';
+            html += '</div>';
+          }
+          html += '</div>';
+        }
       }
       html += '</div>';
       html += '</div>';

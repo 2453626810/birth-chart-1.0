@@ -49,6 +49,9 @@ function initTabs() {
 // 后端服务地址（自建后端，见 server.js，默认本地 3000 端口）
 var BACKEND_URL = 'http://localhost:3000';
 
+// 当前排盘的会话 ID（一次排盘生成一个，用于把排盘和后续 AI 问答关联到同一会话）
+var currentSessionId = null;
+
 /**
  * 把查询记录上报到后端
  * 后端没启动或网络不通时静默失败，不影响网站正常使用

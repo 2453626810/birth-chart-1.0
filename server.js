@@ -55,15 +55,38 @@ function writeRecords(records) {
 // ========== 接口 ==========
 
 // 接收一条查询记录
+// 排盘（type=bazi）会创建一条会话记录；AI 问答（type=qa）会归到对应会话的 qa 列表里
 app.post('/api/records', function (req, res) {
-  const record = Object.assign({}, req.body, {
+  const body = req.body;
+  const records = readRecords();
+
+  // AI 问答：按 sessionId 归到对应的排盘会话里（把同一个人和他的问答放在一起）
+  if (body.type === 'qa' && body.sessionId) {
+    const session = records.find(function (r) { return r.sessionId === body.sessionId; });
+    if (session) {
+      if (!session.qa) session.qa = [];
+      session.qa.push({
+        question: body.question,
+        answer: body.answer,
+        time: new Date().toLocaleString('zh-CN', { hour12: false })
+      });
+      writeRecords(records);
+      return res.json({ ok: true, sessionId: session.sessionId });
+    }
+    // 找不到对应会话（比如没排盘就直接问答），则继续走下面的新增逻辑
+  }
+
+  // 新增记录（排盘会创建一条会话；独立问答也记一条）
+  const record = Object.assign({}, body, {
     id: Date.now() + '-' + Math.floor(Math.random() * 10000),
     time: new Date().toLocaleString('zh-CN', { hour12: false })
   });
-  const records = readRecords();
+  if (record.type === 'bazi') {
+    record.qa = [];  // 排盘记录初始化问答列表，后续问答会往里追加
+  }
   records.push(record);
   writeRecords(records);
-  res.json({ ok: true, id: record.id });
+  res.json({ ok: true, id: record.id, sessionId: record.sessionId });
 });
 
 // 查看所有记录
