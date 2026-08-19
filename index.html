@@ -13,6 +13,9 @@
   <!-- 注意：文件名为 lunar.js 不是 lunar.min.js，这个包没有发布压缩版 -->
   <script src="https://unpkg.com/lunar-javascript/lunar.js"></script>
 
+  <!-- 引入腾讯云开发（CloudBase）JS SDK，用于把记录存到云端数据库 -->
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/3.8.0/cloudbase.full.js"></script>
+
   <!-- 引入全局自定义样式 -->
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -21,9 +24,9 @@
   <!-- ========== 页面顶部标题栏 ========== -->
   <header class="bg-red-900 text-amber-100 py-6 shadow-lg">
     <div class="max-w-5xl mx-auto px-4 text-center">
-      <h1 class="text-3xl md:text-4xl font-bold tracking-widest">玄学命理</h1>
+      <h1 class="text-3xl md:text-4xl font-bold tracking-widest">☯ 玄学命理</h1>
       <p class="mt-2 text-amber-300 text-sm md:text-base">八字排盘 · 传统文化参考</p>
-      <p class="mt-1 text-red-400 text-xs">—— 传统文化参考，仅供娱乐 ——</p>
+      <p class="mt-1 text-amber-200/70 text-xs">—— 传统文化参考，仅供娱乐 ——</p>
     </div>
   </header>
 
@@ -32,12 +35,12 @@
     <div class="max-w-5xl mx-auto flex overflow-x-auto">
       <!-- 每个按钮点击后切换到对应的内容区 -->
       <button class="tab-btn active flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
-                     transition-colors duration-200 hover:bg-red-700"
+                     transition-colors duration-200 hover:bg-stone-700"
               data-tab="tab-knowledge" id="btn-knowledge">
         📚 知识科普
       </button>
       <button class="tab-btn flex-1 min-w-fit px-4 py-3 text-sm md:text-base font-semibold whitespace-nowrap
-                     transition-colors duration-200 hover:bg-red-700"
+                     transition-colors duration-200 hover:bg-stone-700"
               data-tab="tab-bazi" id="btn-bazi">
         🎯 八字排盘
       </button>
@@ -49,13 +52,13 @@
 
     <!-- ===== Tab 1：知识科普 ===== -->
     <section id="tab-knowledge" class="tab-content">
-      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">📚 基础知识科普</h2>
+      <h2 class="text-2xl font-bold text-[#8a6d2f] mb-6 text-center">📚 基础知识科普</h2>
       <p class="text-center text-gray-600 mb-8">了解这些基础概念，再看自己的八字就不懵啦~</p>
 
       <!-- 八字基础知识 -->
       <div class="grid md:grid-cols-2 gap-6 mb-10">
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">🔟 什么是天干？</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🔟 什么是天干？</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             天干有10个：<strong>甲、乙、丙、丁、戊、己、庚、辛、壬、癸</strong>。
             你可以把它们理解为"天上"的标记，用来记录年份、月份、日子和时辰。
@@ -75,8 +78,8 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">🐭 什么是地支？</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🐭 什么是地支？</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             地支有12个：<strong>子、丑、寅、卯、辰、巳、午、未、申、酉、戌、亥</strong>。
             每个地支对应一个生肖和一天中的一个时辰（2小时）。
@@ -98,8 +101,8 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">🔥💧🪵⛰️⚔️ 五行生克</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🔥💧🪵⛰️⚔️ 五行生克</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             五行指<strong>金、木、水、火、土</strong>五种"气"。
             它们之间有两种关系：
@@ -111,8 +114,8 @@
           <p class="mt-2 text-xs text-gray-500">💡 打个比方：木头能让火烧得更旺（木生火），水能把火浇灭（水克火）。</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">📅 什么是八字？</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">📅 什么是八字？</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             <strong>八字</strong>就是把你出生的<strong>年、月、日、时</strong>，分别用天干+地支来表示，
             一共4组×2个字=<strong>8个字</strong>，所以叫"八字"。
@@ -124,8 +127,8 @@
 
       <!-- 六十甲子与纳音 -->
       <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">🔢 什么是六十甲子？</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🔢 什么是六十甲子？</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             把10个天干和12个地支按顺序配对（甲子、乙丑、丙寅…），
             总共能组合出<strong>60种</strong>不同的搭配，这就是"六十甲子"。
@@ -137,8 +140,8 @@
           </p>
         </div>
 
-        <div class="bg-white rounded-xl shadow p-6 border border-amber-200">
-          <h3 class="text-lg font-bold text-red-800 mb-3">🏷️ 什么是十神？</h3>
+        <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8]">
+          <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🏷️ 什么是十神？</h3>
           <p class="text-gray-700 text-sm leading-relaxed">
             <strong>十神</strong>是以八字中的"日干"（代表自己）为中心，
             看其他天干和自己是什么关系。总共有10种：
@@ -154,67 +157,67 @@
       </div>
 
       <!-- 五行对照表 -->
-      <div class="bg-white rounded-xl shadow p-6 border border-amber-200 mb-6">
-        <h3 class="text-lg font-bold text-red-800 mb-3">📊 五行万物对照表</h3>
+      <div class="bg-[#faf5e8] rounded-xl shadow p-6 border border-[#d8c8a8] mb-6">
+        <h3 class="text-lg font-bold text-[#8a6d2f] mb-3">📊 五行万物对照表</h3>
         <p class="text-sm text-gray-600 mb-3">五行不只是"五种元素"，古人把万物都归入五行体系：</p>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-center border-collapse">
             <thead>
-              <tr class="bg-red-800 text-amber-100">
-                <th class="p-2 border border-amber-400">五行</th>
-                <th class="p-2 border border-amber-400">方位</th>
-                <th class="p-2 border border-amber-400">颜色</th>
-                <th class="p-2 border border-amber-400">季节</th>
-                <th class="p-2 border border-amber-400">五脏</th>
-                <th class="p-2 border border-amber-400">情绪</th>
-                <th class="p-2 border border-amber-400">味道</th>
+              <tr class="bg-[#1c1917] text-[#e6d6ae]">
+                <th class="p-2 border border-[#8b7355]">五行</th>
+                <th class="p-2 border border-[#8b7355]">方位</th>
+                <th class="p-2 border border-[#8b7355]">颜色</th>
+                <th class="p-2 border border-[#8b7355]">季节</th>
+                <th class="p-2 border border-[#8b7355]">五脏</th>
+                <th class="p-2 border border-[#8b7355]">情绪</th>
+                <th class="p-2 border border-[#8b7355]">味道</th>
               </tr>
             </thead>
             <tbody>
               <tr class="bg-green-50">
-                <td class="p-2 border border-amber-300 font-bold text-green-700">木</td>
-                <td class="p-2 border border-amber-300">东方</td>
-                <td class="p-2 border border-amber-300">青色</td>
-                <td class="p-2 border border-amber-300">春天</td>
-                <td class="p-2 border border-amber-300">肝</td>
-                <td class="p-2 border border-amber-300">怒</td>
-                <td class="p-2 border border-amber-300">酸</td>
+                <td class="p-2 border border-[#d8c8a8] font-bold text-green-700">木</td>
+                <td class="p-2 border border-[#d8c8a8]">东方</td>
+                <td class="p-2 border border-[#d8c8a8]">青色</td>
+                <td class="p-2 border border-[#d8c8a8]">春天</td>
+                <td class="p-2 border border-[#d8c8a8]">肝</td>
+                <td class="p-2 border border-[#d8c8a8]">怒</td>
+                <td class="p-2 border border-[#d8c8a8]">酸</td>
               </tr>
               <tr class="bg-red-50">
-                <td class="p-2 border border-amber-300 font-bold text-red-700">火</td>
-                <td class="p-2 border border-amber-300">南方</td>
-                <td class="p-2 border border-amber-300">红色</td>
-                <td class="p-2 border border-amber-300">夏天</td>
-                <td class="p-2 border border-amber-300">心</td>
-                <td class="p-2 border border-amber-300">喜</td>
-                <td class="p-2 border border-amber-300">苦</td>
+                <td class="p-2 border border-[#d8c8a8] font-bold text-red-700">火</td>
+                <td class="p-2 border border-[#d8c8a8]">南方</td>
+                <td class="p-2 border border-[#d8c8a8]">红色</td>
+                <td class="p-2 border border-[#d8c8a8]">夏天</td>
+                <td class="p-2 border border-[#d8c8a8]">心</td>
+                <td class="p-2 border border-[#d8c8a8]">喜</td>
+                <td class="p-2 border border-[#d8c8a8]">苦</td>
               </tr>
               <tr class="bg-yellow-50">
-                <td class="p-2 border border-amber-300 font-bold text-yellow-700">土</td>
-                <td class="p-2 border border-amber-300">中央</td>
-                <td class="p-2 border border-amber-300">黄色</td>
-                <td class="p-2 border border-amber-300">长夏</td>
-                <td class="p-2 border border-amber-300">脾</td>
-                <td class="p-2 border border-amber-300">思</td>
-                <td class="p-2 border border-amber-300">甜</td>
+                <td class="p-2 border border-[#d8c8a8] font-bold text-yellow-700">土</td>
+                <td class="p-2 border border-[#d8c8a8]">中央</td>
+                <td class="p-2 border border-[#d8c8a8]">黄色</td>
+                <td class="p-2 border border-[#d8c8a8]">长夏</td>
+                <td class="p-2 border border-[#d8c8a8]">脾</td>
+                <td class="p-2 border border-[#d8c8a8]">思</td>
+                <td class="p-2 border border-[#d8c8a8]">甜</td>
               </tr>
               <tr class="bg-slate-100">
-                <td class="p-2 border border-amber-300 font-bold text-slate-700">金</td>
-                <td class="p-2 border border-amber-300">西方</td>
-                <td class="p-2 border border-amber-300">白色</td>
-                <td class="p-2 border border-amber-300">秋天</td>
-                <td class="p-2 border border-amber-300">肺</td>
-                <td class="p-2 border border-amber-300">悲</td>
-                <td class="p-2 border border-amber-300">辣</td>
+                <td class="p-2 border border-[#d8c8a8] font-bold text-slate-700">金</td>
+                <td class="p-2 border border-[#d8c8a8]">西方</td>
+                <td class="p-2 border border-[#d8c8a8]">白色</td>
+                <td class="p-2 border border-[#d8c8a8]">秋天</td>
+                <td class="p-2 border border-[#d8c8a8]">肺</td>
+                <td class="p-2 border border-[#d8c8a8]">悲</td>
+                <td class="p-2 border border-[#d8c8a8]">辣</td>
               </tr>
               <tr class="bg-blue-50">
-                <td class="p-2 border border-amber-300 font-bold text-blue-700">水</td>
-                <td class="p-2 border border-amber-300">北方</td>
-                <td class="p-2 border border-amber-300">黑/蓝色</td>
-                <td class="p-2 border border-amber-300">冬天</td>
-                <td class="p-2 border border-amber-300">肾</td>
-                <td class="p-2 border border-amber-300">恐</td>
-                <td class="p-2 border border-amber-300">咸</td>
+                <td class="p-2 border border-[#d8c8a8] font-bold text-blue-700">水</td>
+                <td class="p-2 border border-[#d8c8a8]">北方</td>
+                <td class="p-2 border border-[#d8c8a8]">黑/蓝色</td>
+                <td class="p-2 border border-[#d8c8a8]">冬天</td>
+                <td class="p-2 border border-[#d8c8a8]">肾</td>
+                <td class="p-2 border border-[#d8c8a8]">恐</td>
+                <td class="p-2 border border-[#d8c8a8]">咸</td>
               </tr>
             </tbody>
           </table>
@@ -225,17 +228,17 @@
 
     <!-- ===== Tab 2：八字排盘 ===== -->
     <section id="tab-bazi" class="tab-content hidden">
-      <h2 class="text-2xl font-bold text-red-900 mb-6 text-center">🎯 八字排盘</h2>
+      <h2 class="text-2xl font-bold text-[#8a6d2f] mb-6 text-center">🎯 八字排盘</h2>
 
       <!-- 输入表单 -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border border-amber-300 max-w-lg mx-auto">
-        <h3 class="text-lg font-bold text-red-800 mb-4">请输入你的出生信息</h3>
+      <div class="bg-[#faf5e8] rounded-xl shadow-lg p-6 border border-[#d8c8a8] max-w-lg mx-auto">
+        <h3 class="text-lg font-bold text-[#8a6d2f] mb-4">请输入你的出生信息</h3>
 
         <!-- 出生日期 -->
         <div class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">📅 出生日期（公历）</label>
           <input type="date" id="birth-date"
-                 class="w-full border border-amber-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                 class="w-full border border-[#d8c8a8] rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b8913d] focus:border-[#b8913d]"
                  value="2000-01-01">
         </div>
 
@@ -243,7 +246,7 @@
         <div class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">⏰ 出生时辰</label>
           <select id="birth-hour"
-                  class="w-full border border-amber-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                  class="w-full border border-[#d8c8a8] rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#b8913d] focus:border-[#b8913d]">
             <option value="0">子时（23:00 - 01:00）</option>
             <option value="1">丑时（01:00 - 03:00）</option>
             <option value="2">寅时（03:00 - 05:00）</option>
@@ -264,11 +267,11 @@
           <label class="block text-sm font-semibold text-gray-700 mb-1">👤 性别</label>
           <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="gender" value="male" checked class="accent-red-700">
+              <input type="radio" name="gender" value="male" checked class="accent-[#b8913d]">
               <span class="text-sm">男</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="gender" value="female" class="accent-red-700">
+              <input type="radio" name="gender" value="female" class="accent-[#b8913d]">
               <span class="text-sm">女</span>
             </label>
           </div>
@@ -276,8 +279,8 @@
 
         <!-- 排盘按钮 -->
         <button onclick="calculateBazi()"
-                class="w-full bg-red-800 text-amber-100 py-3 rounded-lg font-bold text-lg
-                       hover:bg-red-700 transition-colors duration-200 shadow-md disabled:opacity-50 disabled:cursor-wait"
+                class="w-full bg-[#1c1917] text-[#e6d6ae] py-3 rounded-lg font-bold text-lg
+                       hover:bg-stone-700 transition-colors duration-200 shadow-md disabled:opacity-50 disabled:cursor-wait"
                 id="btn-calc">
           🔮 开始排盘
         </button>
@@ -299,7 +302,7 @@
   <footer class="bg-red-900 text-amber-100 py-6 mt-12">
     <div class="max-w-5xl mx-auto px-4 text-center text-sm">
       <p class="font-bold mb-2">⚠️ 免责声明</p>
-      <p class="text-red-300 text-xs leading-relaxed">
+      <p class="text-amber-200/80 text-xs leading-relaxed">
         本网站所有内容仅供传统文化参考与娱乐，请勿作为人生决策依据。
         算命不是科学，命运掌握在自己手中。
         八字算法基于开源库 lunar-javascript 计算，命理分析基于《渊海子平》《三命通会》《麻衣神相》等公版古籍整理。
@@ -307,6 +310,8 @@
     </div>
   </footer>
 
+  <!-- 引入 CloudBase 接入（把记录存到云端数据库） -->
+  <script src="js/cloudbase.js"></script>
   <!-- 引入主入口 JS（控制Tab切换等全局逻辑） -->
   <script src="js/main.js"></script>
   <!-- 引入八字计算 JS -->

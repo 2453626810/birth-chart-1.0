@@ -6,47 +6,51 @@
   <title>查询记录后台</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f8fafc; color: #1e293b; }
-    .header { background: linear-gradient(135deg, #7f1d1d, #b91c1c); color: #fef3c7; padding: 20px; text-align: center; }
-    .header h1 { font-size: 22px; letter-spacing: 2px; }
-    .header p { font-size: 13px; margin-top: 6px; color: #fbbf24; }
+    body { font-family: "Songti SC", "STSong", "SimSun", "宋体", serif; background: #f4ecd9; color: #3a3228; line-height: 1.7; }
+    .header { background: linear-gradient(135deg, #141210, #1c1917 45%, #44403c); color: #e6d6ae; padding: 20px; text-align: center; border-bottom: 2px solid #b8913d; }
+    .header h1 { font-size: 22px; letter-spacing: 2px; font-family: "KaiTi", "STKaiti", "楷体", serif; }
+    .header p { font-size: 13px; margin-top: 6px; color: #c9a45c; }
 
     /* 统计面板 */
     .stats { max-width: 900px; margin: 20px auto 0; padding: 0 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .stat-card .num { font-size: 26px; font-weight: bold; color: #b91c1c; }
-    .stat-card .lbl { font-size: 13px; color: #64748b; margin-top: 4px; }
-    .year-dist { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 13px; color: #64748b; }
+    .stat-card { background: #faf5e8; border: 1px solid #d8c8a8; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .stat-card .num { font-size: 26px; font-weight: bold; color: #8a6d2f; }
+    .stat-card .lbl { font-size: 13px; color: #6b5b45; margin-top: 4px; }
+    .year-dist { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 13px; color: #6b5b45; }
 
     /* 工具栏 */
     .toolbar { max-width: 900px; margin: 16px auto 0; padding: 0 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
     .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .filters select, .filters input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+    .filters select, .filters input { border: 1px solid #d8c8a8; border-radius: 8px; padding: 7px 10px; font-size: 13px; background: #faf5e8; color: #3a3228; }
     .filters input { width: 140px; }
     .actions { display: flex; gap: 8px; }
     button { border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 13px; }
-    .btn-primary { background: #dc2626; color: #fff; }
-    .btn-primary:hover { background: #b91c1c; }
-    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
-    .btn-secondary:hover { background: #e2e8f0; }
-    .count { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 14px; color: #64748b; }
+    .btn-primary { background: #1c1917; color: #e6d6ae; }
+    .btn-primary:hover { background: #292524; }
+    .btn-secondary { background: #faf5e8; color: #3a3228; border: 1px solid #d8c8a8; }
+    .btn-secondary:hover { background: #efe5cf; }
+    .count { max-width: 900px; margin: 12px auto 0; padding: 0 16px; font-size: 14px; color: #6b5b45; }
 
     /* 记录列表 */
     .list { max-width: 900px; margin: 12px auto 40px; padding: 0 16px; }
-    .record { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .record { background: #faf5e8; border: 1px solid #d8c8a8; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
     .record .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: bold; }
-    .badge-bazi { background: #fef3c7; color: #92400e; }
-    .badge-qa { background: #dbeafe; color: #1e40af; }
-    .record .time { font-size: 12px; color: #94a3b8; }
-    .record .content { font-size: 14px; line-height: 1.7; color: #334155; }
-    .record .content .label { color: #64748b; font-size: 13px; }
-    .qa-block { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e8f0; }
-    .qa-item { background: #f8fafc; border-radius: 8px; padding: 8px 10px; margin-top: 6px; }
-    .qa-q { color: #1e40af; margin-bottom: 4px; }
-    .qa-a { color: #334155; }
-    .empty { text-align: center; color: #94a3b8; padding: 60px 0; font-size: 14px; }
+    .badge-bazi { background: #efe5cf; color: #8a6d2f; border: 1px solid #b8913d; }
+    .badge-qa { background: #e8eef0; color: #33505a; border: 1px solid #a8bec4; }
+    .record .time { font-size: 12px; color: #8b7355; }
+    .record .content { font-size: 14px; line-height: 1.7; color: #3a3228; }
+    .record .content .label { color: #8a6d2f; font-size: 13px; }
+    .qa-block { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #d8c8a8; }
+    .qa-item { background: #f4ecd9; border-radius: 8px; padding: 8px 10px; margin-top: 6px; }
+    .qa-q { color: #33505a; margin-bottom: 4px; }
+    .qa-a { color: #3a3228; }
+    .empty { text-align: center; color: #8b7355; padding: 60px 0; font-size: 14px; }
   </style>
+
+  <!-- 引入腾讯云开发（CloudBase）JS SDK 和接入代码（js/cloudbase.js） -->
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/3.8.0/cloudbase.full.js"></script>
+  <script src="js/cloudbase.js"></script>
 </head>
 <body>
   <div class="header">
@@ -89,59 +93,68 @@
   <script>
     // 当前筛选条件
     var currentFilter = { gender: '', year: '', keyword: '' };
+    // 全部记录缓存（从 CloudBase 拉取一次后复用，筛选/统计/导出都在前端完成）
+    var allRecords = [];
 
-    // 加载统计信息
+    // 加载统计信息（基于全部记录，在前端计算，不再请求后端 /api/stats）
     function loadStats() {
-      fetch('/api/stats')
-        .then(function (r) { return r.json(); })
-        .then(function (s) {
-          document.getElementById('stat-sessions').textContent = s.totalSessions;
-          document.getElementById('stat-qa').textContent = s.totalQa;
-          document.getElementById('stat-male').textContent = s.genderCount['男'];
-          document.getElementById('stat-female').textContent = s.genderCount['女'];
-          // 年份分布
-          var years = Object.keys(s.yearCount).sort();
-          var yd = document.getElementById('year-dist');
-          if (years.length) {
-            var parts = [];
-            years.forEach(function (y) { parts.push(y + '年：' + s.yearCount[y] + ' 人'); });
-            yd.textContent = '出生年份分布：' + parts.join('　');
-          } else {
-            yd.textContent = '';
-          }
-        })
-        .catch(function () {});
+      var totalSessions = allRecords.length;
+      var totalQa = 0;
+      var genderCount = { '男': 0, '女': 0, '未知': 0 };
+      var yearCount = {};
+
+      allRecords.forEach(function (r) {
+        if (r.qa) totalQa += r.qa.length;
+        if (r.genderLabel === '男' || r.genderLabel === '女') {
+          genderCount[r.genderLabel]++;
+        } else {
+          genderCount['未知']++;
+        }
+        if (r.birthDate) {
+          var y = String(r.birthDate).substring(0, 4);
+          if (y) yearCount[y] = (yearCount[y] || 0) + 1;
+        }
+      });
+
+      document.getElementById('stat-sessions').textContent = totalSessions;
+      document.getElementById('stat-qa').textContent = totalQa;
+      document.getElementById('stat-male').textContent = genderCount['男'];
+      document.getElementById('stat-female').textContent = genderCount['女'];
+
+      var years = Object.keys(yearCount).sort();
+      var yd = document.getElementById('year-dist');
+      if (years.length) {
+        var parts = [];
+        years.forEach(function (y) { parts.push(y + '年：' + yearCount[y] + ' 人'); });
+        yd.textContent = '出生年份分布：' + parts.join('　');
+      } else {
+        yd.textContent = '';
+      }
     }
 
-    // 加载并渲染记录
-    function loadRecords() {
-      // 拼接筛选参数
-      var params = [];
-      if (currentFilter.gender) params.push('gender=' + encodeURIComponent(currentFilter.gender));
-      if (currentFilter.year) params.push('year=' + encodeURIComponent(currentFilter.year));
-      if (currentFilter.keyword) params.push('keyword=' + encodeURIComponent(currentFilter.keyword));
-      var url = '/api/records' + (params.length ? '?' + params.join('&') : '');
+    // 按当前筛选条件过滤记录（原先后端 /api/records 的筛选逻辑，改到前端来做）
+    function filteredRecords() {
+      var list = allRecords;
+      if (currentFilter.gender) list = list.filter(function (r) { return r.genderLabel === currentFilter.gender; });
+      if (currentFilter.year) list = list.filter(function (r) { return r.birthDate && String(r.birthDate).indexOf(currentFilter.year) === 0; });
+      if (currentFilter.keyword) list = list.filter(function (r) { return JSON.stringify(r).indexOf(currentFilter.keyword) !== -1; });
+      return list;
+    }
 
-      fetch(url)
-        .then(function (r) { return r.json(); })
-        .then(function (records) {
-          document.getElementById('count').textContent = '共 ' + records.length + ' 个会话';
-          var list = document.getElementById('list');
-          if (!records.length) {
-            list.innerHTML = '<div class="empty">没有符合条件的记录</div>';
-            return;
-          }
-          records.reverse();
-          var html = '';
-          for (var i = 0; i < records.length; i++) {
-            html += renderRecord(records[i]);
-          }
-          list.innerHTML = html;
-        })
-        .catch(function () {
-          document.getElementById('count').textContent = '加载失败';
-          document.getElementById('list').innerHTML = '<div class="empty">加载记录失败</div>';
-        });
+    // 加载并渲染记录（从缓存的 allRecords 里筛选后渲染，不再请求后端）
+    function loadRecords() {
+      var records = filteredRecords();
+      document.getElementById('count').textContent = '共 ' + records.length + ' 个会话';
+      var list = document.getElementById('list');
+      if (!records.length) {
+        list.innerHTML = '<div class="empty">没有符合条件的记录</div>';
+        return;
+      }
+      var html = '';
+      for (var i = records.length - 1; i >= 0; i--) {
+        html += renderRecord(records[i]);
+      }
+      list.innerHTML = html;
     }
 
     // 渲染单条记录
@@ -198,15 +211,77 @@
       loadRecords();
     }
 
-    // 导出数据
+    // 导出数据（在前端生成文件下载，不再请求后端 /api/export）
     function exportData(format) {
-      window.location.href = '/api/export?format=' + format;
+      var records = filteredRecords();
+      if (format === 'json') {
+        downloadFile('records.json', JSON.stringify(records, null, 2), 'application/json');
+        return;
+      }
+
+      // CSV（带 BOM，让 Excel 正确识别中文）
+      var lines = ['会话ID,出生日期,时辰,性别,四柱,五行,问答数,问答内容,排盘时间'];
+      records.forEach(function (r) {
+        var qaText = '';
+        if (r.qa && r.qa.length) {
+          var qaParts = [];
+          r.qa.forEach(function (q) {
+            qaParts.push('问:' + (q.question || '') + ' 答:' + (q.answer || ''));
+          });
+          qaText = qaParts.join(' | ');
+        }
+        var row = [
+          r.sessionId || '',
+          r.birthDate || '',
+          r.birthHourLabel || '',
+          r.genderLabel || '',
+          r.pillars || '',
+          r.wuxing || '',
+          r.qa ? r.qa.length : 0,
+          qaText,
+          r.time || ''
+        ];
+        lines.push(row.map(csvCell).join(','));
+      });
+      downloadFile('records.csv', '﻿' + lines.join('\n'), 'text/csv');
     }
 
-    // 加载全部（统计 + 记录）
+    // 触发浏览器下载文件
+    function downloadFile(filename, content, mime) {
+      var blob = new Blob([content], { type: mime + ';charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }
+
+    // CSV 单元格转义（处理逗号、引号、换行）
+    function csvCell(value) {
+      var s = String(value === null || value === undefined ? '' : value);
+      if (s.indexOf(',') !== -1 || s.indexOf('"') !== -1 || s.indexOf('\n') !== -1) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }
+
+    // 加载全部（先从 CloudBase 拉取记录，再统计 + 渲染）
     function loadAll() {
-      loadStats();
-      loadRecords();
+      document.getElementById('count').textContent = '加载中…';
+      getRecords()
+        .then(function (records) {
+          allRecords = records;
+          loadStats();
+          loadRecords();
+        })
+        .catch(function (err) {
+          console.error('加载记录失败：', err);
+          var msg = (err && err.message) ? err.message : String(err);
+          document.getElementById('count').textContent = '加载失败：' + msg;
+          document.getElementById('list').innerHTML = '<div class="empty">加载记录失败，错误信息：<br><br><b>' + esc(msg) + '</b><br><br>请按 F12 打开浏览器控制台看详细报错，并确认：<br>1. 云函数「api」已部署到 CloudBase；<br>2. 已开启「匿名登录」；<br>3. 环境 ID 正确（birth-chart-d6gxjzx1wa0658046）</div>';
+        });
     }
 
     function esc(s) {

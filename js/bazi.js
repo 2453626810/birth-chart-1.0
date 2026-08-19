@@ -1715,11 +1715,11 @@ function showCopySuccess() {
   if (btns.length) {
     for (var i = 0; i < btns.length; i++) {
       btns[i].innerHTML = '✅ 已复制！';
-      btns[i].classList.add('bg-green-100');
+      btns[i].classList.add('bg-[#eef3e7]');
       (function (btn) {
         setTimeout(function () {
           btn.innerHTML = '📋 一键复制排盘结果';
-          btn.classList.remove('bg-green-100');
+          btn.classList.remove('bg-[#eef3e7]');
         }, 2000);
       })(btns[i]);
     }
@@ -1767,7 +1767,7 @@ function formatShenShaCell(pillarStars) {
   for (var i = 0; i < allStars.length; i++) {
     var star = allStars[i];
     var isGood = pillarStars.good.indexOf(star) !== -1;
-    var color = isGood ? 'text-green-600' : 'text-red-500';
+    var color = isGood ? 'text-[#5b7a52]' : 'text-[#a63a2e]';
     result += '<span class="' + color + '">' + star + '</span> ';
   }
   return result.trim();
@@ -1790,12 +1790,41 @@ function renderBaziResult(r) {
 
   // ===== 顶部复制按钮 =====
   html += '<div class="text-right mb-3">';
-  html += '<button id="btn-copy" onclick="copyBaziResult()" class="text-sm px-3 py-1 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition-colors border border-amber-300" title="把排盘结果复制到剪贴板">📋 一键复制排盘结果</button>';
+  html += '<button id="btn-copy" onclick="copyBaziResult()" class="text-sm px-3 py-1 bg-[#e6d6ae] hover:bg-[#d8c8a8] text-[#8a6d2f] rounded-lg transition-colors border border-[#b8913d]" title="把排盘结果复制到剪贴板">📋 一键复制排盘结果</button>';
   html += '</div>';
+
+  // ===== 卡片0：命盘总览（一眼看懂核心信息） =====
+  var ys0 = r.yongShen;
+  var wuxingOrder0 = ['金', '木', '水', '火', '土'];
+  var missing0 = [];
+  for (var m0 = 0; m0 < wuxingOrder0.length; m0++) {
+    if (!r.wuxingCount[wuxingOrder0[m0]]) missing0.push(wuxingOrder0[m0]);
+  }
+  html += '<div class="result-card border-[#b8913d]">';
+  html += '<h3 class="text-xl font-bold text-[#8a6d2f] mb-3 text-center">📜 命盘总览</h3>';
+  html += '<div class="text-center mb-3">';
+  html += '<p class="text-xs text-gray-500">日主（代表你）</p>';
+  html += '<p class="text-2xl font-bold text-[#a63a2e]">' + r.dayPillar[0] + ys0.dayElement + '</p>';
+  html += '<p class="text-sm text-gray-600 mt-1">' + ys0.strength + ' · 喜用神：<strong class="text-[#5b7a52]">' + ys0.yongShen.join('、') + '</strong></p>';
+  html += '</div>';
+  html += '<div class="grid grid-cols-2 gap-2 text-sm">';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-2 border border-[#d8c8a8] text-center">';
+  html += '<p class="text-gray-500 text-xs">四柱八字</p>';
+  html += '<p class="font-bold">' + r.pillars + '</p>';
+  html += '</div>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-2 border border-[#d8c8a8] text-center">';
+  html += '<p class="text-gray-500 text-xs">五行' + (missing0.length ? '（缺 ' + missing0.join('、') + '）' : '齐全') + '</p>';
+  html += '<p class="font-bold">金' + r.wuxingCount['金'] + ' 木' + r.wuxingCount['木'] + ' 水' + r.wuxingCount['水'] + ' 火' + r.wuxingCount['火'] + ' 土' + r.wuxingCount['土'] + '</p>';
+  html += '</div>';
+  html += '</div>';
+  if (r.currentReading && r.currentReading.found) {
+    html += '<p class="text-xs text-gray-500 text-center mt-3">📍 当前大运：<strong class="text-[#8a6d2f]">' + r.currentReading.daYunGanZhi + '</strong>（' + r.currentReading.currentYear + '年）</p>';
+  }
+  html += '</div>'; // 总览卡片结束
 
   // ===== 卡片1：四柱八字排盘表 =====
   html += '<div class="result-card">';
-  html += '<h3 class="text-xl font-bold text-red-800 mb-4 text-center">📋 八字排盘</h3>';
+  html += '<h3 class="text-xl font-bold text-[#8a6d2f] mb-4 text-center">📋 八字排盘</h3>';
 
   // 显示公历和农历日期
   html += '<p class="text-sm text-gray-500 text-center mb-4">';
@@ -1816,7 +1845,7 @@ function renderBaziResult(r) {
   html += '<tr>';
   html += '<td><span class="text-xl font-bold">' + r.yearPillar[0] + '</span><br><span class="text-xs text-gray-500">' + r.yearShiShenGan + '</span></td>';
   html += '<td><span class="text-xl font-bold">' + r.monthPillar[0] + '</span><br><span class="text-xs text-gray-500">' + r.monthShiShenGan + '</span></td>';
-  html += '<td><span class="text-xl font-bold text-red-700">' + r.dayPillar[0] + '</span><br><span class="text-xs text-gray-500">' + r.dayShiShenGan + '</span></td>';
+  html += '<td class="bg-[#f3e6e2]"><span class="text-xl font-bold text-[#a63a2e]">' + r.dayPillar[0] + '</span><br><span class="text-xs text-gray-500">' + r.dayShiShenGan + '</span></td>';
   html += '<td><span class="text-xl font-bold">' + r.timePillar[0] + '</span><br><span class="text-xs text-gray-500">' + r.timeShiShenGan + '</span></td>';
   html += '</tr>';
 
@@ -1824,12 +1853,12 @@ function renderBaziResult(r) {
   html += '<tr>';
   html += '<td><span class="text-xl font-bold">' + r.yearPillar[1] + '</span><br><span class="text-xs text-gray-500">' + r.yearShiShenZhi + '</span></td>';
   html += '<td><span class="text-xl font-bold">' + r.monthPillar[1] + '</span><br><span class="text-xs text-gray-500">' + r.monthShiShenZhi + '</span></td>';
-  html += '<td><span class="text-xl font-bold text-red-700">' + r.dayPillar[1] + '</span><br><span class="text-xs text-gray-500">' + r.dayShiShenZhi + '</span></td>';
+  html += '<td class="bg-[#f3e6e2]"><span class="text-xl font-bold text-[#a63a2e]">' + r.dayPillar[1] + '</span><br><span class="text-xs text-gray-500">' + r.dayShiShenZhi + '</span></td>';
   html += '<td><span class="text-xl font-bold">' + r.timePillar[1] + '</span><br><span class="text-xs text-gray-500">' + r.timeShiShenZhi + '</span></td>';
   html += '</tr>';
 
   // 第三行：藏干
-  html += '<tr class="bg-amber-50">';
+  html += '<tr class="bg-[#f4ecd9]">';
   html += '<td><span class="text-sm text-gray-600">藏干：' + r.yearHideGan + '</span></td>';
   html += '<td><span class="text-sm text-gray-600">藏干：' + r.monthHideGan + '</span></td>';
   html += '<td><span class="text-sm text-gray-600">藏干：' + r.dayHideGan + '</span></td>';
@@ -1853,7 +1882,7 @@ function renderBaziResult(r) {
   html += '</tr>';
 
   // 第六行：空亡（旬空）—— 该柱地支中哪些是空的
-  html += '<tr class="bg-gray-50">';
+  html += '<tr class="bg-[#f7f2e7]">';
   html += '<td><span class="text-xs text-gray-500">空亡：' + r.yearXunKong + '</span></td>';
   html += '<td><span class="text-xs text-gray-500">空亡：' + r.monthXunKong + '</span></td>';
   html += '<td><span class="text-xs text-gray-500">空亡：' + r.dayXunKong + '</span></td>';
@@ -1874,9 +1903,9 @@ function renderBaziResult(r) {
 
   // 补充：命宫、胎元、身宫
   html += '<div class="grid grid-cols-3 gap-2 mt-4 text-center text-sm">';
-  html += '<div class="bg-amber-50 rounded-lg p-2"><span class="text-gray-500">命宫</span><br><span class="font-bold">' + r.mingGong + '</span></div>';
-  html += '<div class="bg-amber-50 rounded-lg p-2"><span class="text-gray-500">胎元</span><br><span class="font-bold">' + r.taiYuan + '</span></div>';
-  html += '<div class="bg-amber-50 rounded-lg p-2"><span class="text-gray-500">身宫</span><br><span class="font-bold">' + r.shenGong + '</span></div>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-2"><span class="text-gray-500">命宫</span><br><span class="font-bold">' + r.mingGong + '</span></div>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-2"><span class="text-gray-500">胎元</span><br><span class="font-bold">' + r.taiYuan + '</span></div>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-2"><span class="text-gray-500">身宫</span><br><span class="font-bold">' + r.shenGong + '</span></div>';
   html += '</div>';
 
   html += '</div>'; // 卡片1结束
@@ -1886,17 +1915,17 @@ function renderBaziResult(r) {
   var allGood = ss.goodStars;
   var allBad = ss.badStars;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">⭐ 神煞总览</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">⭐ 神煞总览</h3>';
   html += '<p class="text-xs text-gray-500 mb-3">神煞是八字中的特殊星神，吉星代表好运助力，凶星代表需要注意的方面。</p>';
 
   // 吉星展示
   if (allGood.length > 0) {
     html += '<div class="mb-3">';
-    html += '<p class="text-sm font-bold text-green-700 mb-2">🟢 你的吉星（带来好运和助力）：</p>';
+    html += '<p class="text-sm font-bold text-[#5b7a52] mb-2">🟢 你的吉星（带来好运和助力）：</p>';
     html += '<div class="flex flex-wrap gap-2">';
     for (var gi = 0; gi < allGood.length; gi++) {
       var starName = allGood[gi];
-      html += '<span class="inline-block bg-green-50 text-green-800 rounded-full px-3 py-1 text-sm cursor-help" title="' + (SHEN_SHA_DESC[starName] || '') + '">' + starName + '</span>';
+      html += '<span class="inline-block bg-[#eef3e7] text-[#5b7a52] rounded-full px-3 py-1 text-sm cursor-help" title="' + (SHEN_SHA_DESC[starName] || '') + '">' + starName + '</span>';
     }
     html += '</div></div>';
   }
@@ -1904,11 +1933,11 @@ function renderBaziResult(r) {
   // 凶星展示
   if (allBad.length > 0) {
     html += '<div>';
-    html += '<p class="text-sm font-bold text-red-700 mb-2">🔴 需要注意的神煞（可能带来挑战）：</p>';
+    html += '<p class="text-sm font-bold text-[#a63a2e] mb-2">🔴 需要注意的神煞（可能带来挑战）：</p>';
     html += '<div class="flex flex-wrap gap-2">';
     for (var bj = 0; bj < allBad.length; bj++) {
       var badName = allBad[bj];
-      html += '<span class="inline-block bg-red-50 text-red-700 rounded-full px-3 py-1 text-sm cursor-help" title="' + (SHEN_SHA_DESC[badName] || '') + '">' + badName + '</span>';
+      html += '<span class="inline-block bg-[#f3e6e2] text-[#a63a2e] rounded-full px-3 py-1 text-sm cursor-help" title="' + (SHEN_SHA_DESC[badName] || '') + '">' + badName + '</span>';
     }
     html += '</div></div>';
   }
@@ -1922,25 +1951,30 @@ function renderBaziResult(r) {
 
   // ===== 卡片2：五行统计 =====
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">🔥💧🪵⛰️⚔️ 五行统计</h3>';
-  html += '<div class="grid grid-cols-5 gap-2 text-center">';
-
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🔥💧🪵⛰️⚔️ 五行统计</h3>';
   var wc = r.wuxingCount;
   var wuxingList = ['金', '木', '水', '火', '土'];
+  // 先算出数量最多的五行，作为柱状图的满格基准
+  var maxCnt = 1;
+  for (var i = 0; i < wuxingList.length; i++) {
+    if (wc[wuxingList[i]] > maxCnt) maxCnt = wc[wuxingList[i]];
+  }
+  html += '<div class="grid grid-cols-5 gap-2 text-center items-end">';
   for (var i = 0; i < wuxingList.length; i++) {
     var wx = wuxingList[i];
     var cnt = wc[wx];
-    // 用色块和柱状图显示每个五行的数量
-    var barHeight = cnt * 20; // 每个计数 20px 高度
-    html += '<div>';
-    html += '<div class="rounded-lg p-2" style="background-color:' + ELEMENT_COLORS[wx] + '; color:' + ELEMENT_TEXT_COLORS[wx] + ';">';
-    html += '<p class="text-sm font-bold">' + wx + '</p>';
-    html += '<p class="text-2xl font-bold">' + cnt + '</p>';
-    html += '<p class="text-xs">个</p>';
+    // 柱子高度按数量占最大数量的比例算（最少留 4% 的底，避免看不到）
+    var barPct = cnt === 0 ? 4 : Math.round((cnt / maxCnt) * 100);
+    html += '<div class="flex flex-col items-center">';
+    html += '<div class="flex items-end justify-center h-20 w-full mb-2">';
+    html += '<div class="w-6 rounded-t" style="height:' + barPct + '%; background-color:' + ELEMENT_COLORS[wx] + '; border:1px solid ' + ELEMENT_TEXT_COLORS[wx] + ';"></div>';
+    html += '</div>';
+    html += '<div class="w-full rounded-lg py-1" style="background-color:' + ELEMENT_COLORS[wx] + '; color:' + ELEMENT_TEXT_COLORS[wx] + ';">';
+    html += '<p class="text-sm font-bold leading-tight">' + wx + '</p>';
+    html += '<p class="text-base font-bold leading-tight">' + cnt + '</p>';
     html += '</div>';
     html += '</div>';
   }
-
   html += '</div>';
 
   // 五行缺失/过旺详解
@@ -1975,9 +2009,9 @@ function renderBaziResult(r) {
 
   if (missingList.length > 0) {
     html += '<div class="mt-3">';
-    html += '<p class="text-sm text-orange-600 font-bold">⚠️ 你的八字中缺了「' + missingList.join('、') + '」</p>';
+    html += '<p class="text-sm text-[#a63a2e] font-bold">⚠️ 你的八字中缺了「' + missingList.join('、') + '」</p>';
     html += '<p class="text-xs text-gray-500 mt-1 mb-2">八字讲究五行平衡，某个五行缺失不代表"命不好"，只是说明你在某些方面可能天生不太擅长，需要后天有意识地培养和补充。</p>';
-    html += '<details class="text-xs"><summary class="text-orange-700 cursor-pointer font-bold">📖 缺少每个五行的具体影响（点击展开）</summary>';
+    html += '<details class="text-xs"><summary class="text-[#8a6d2f] cursor-pointer font-bold">📖 缺少每个五行的具体影响（点击展开）</summary>';
     for (var mi = 0; mi < missingList.length; mi++) {
       var mx = missingList[mi];
       html += '<p class="text-gray-700 mt-1"><strong>' + mx + '：</strong>' + (MISSING_EFFECT[mx] || '') + '</p>';
@@ -1988,8 +2022,8 @@ function renderBaziResult(r) {
 
   if (excessList.length > 0) {
     html += '<div class="mt-2">';
-    html += '<p class="text-sm text-red-600 font-bold">🔥 你的八字中「' + excessList.join('、') + '」偏旺（≥4个）</p>';
-    html += '<details class="text-xs"><summary class="text-red-600 cursor-pointer font-bold">📖 五行过旺的影响（点击展开）</summary>';
+    html += '<p class="text-sm text-[#a63a2e] font-bold">🔥 你的八字中「' + excessList.join('、') + '」偏旺（≥4个）</p>';
+    html += '<details class="text-xs"><summary class="text-[#a63a2e] cursor-pointer font-bold">📖 五行过旺的影响（点击展开）</summary>';
     for (var ei = 0; ei < excessList.length; ei++) {
       var ex = excessList[ei];
       html += '<p class="text-gray-700 mt-1"><strong>' + ex + '：</strong>' + (EXCESS_EFFECT[ex] || '') + '</p>';
@@ -1999,7 +2033,7 @@ function renderBaziResult(r) {
   }
 
   if (missingList.length === 0 && excessList.length === 0) {
-    html += '<p class="mt-3 text-sm text-green-600">✅ 五行齐全且分布均衡，八字五行比较均衡，性格各方面发展也比较全面。</p>';
+    html += '<p class="mt-3 text-sm text-[#5b7a52]">✅ 五行齐全且分布均衡，八字五行比较均衡，性格各方面发展也比较全面。</p>';
   }
 
   html += '</div>'; // 卡片2结束
@@ -2007,18 +2041,18 @@ function renderBaziResult(r) {
   // ===== 卡片3：用神分析 =====
   var ys = r.yongShen;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">🎯 用神分析（核心）</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🎯 用神分析（核心）</h3>';
   html += '<p class="text-sm text-gray-700 mb-2">日主五行：<strong>' + ys.dayElement + '</strong>（' + ys.strength + '）</p>';
   html += '<p class="text-sm text-gray-600 mb-3">' + ys.strengthDesc + '</p>';
 
   html += '<div class="grid grid-cols-2 gap-3">';
-  html += '<div class="bg-green-50 rounded-lg p-3 border border-green-200">';
-  html += '<p class="font-bold text-green-800">✅ 喜用神（对你有利的）</p>';
+  html += '<div class="bg-[#eef3e7] rounded-lg p-3 border border-[#b9c8aa]">';
+  html += '<p class="font-bold text-[#5b7a52]">✅ 喜用神（对你有利的）</p>';
   html += '<p class="text-sm">' + ys.yongShen.join('、') + '</p>';
   html += '<p class="text-xs text-gray-500 mt-1">' + ys.yongShenDesc + '</p>';
   html += '</div>';
-  html += '<div class="bg-red-50 rounded-lg p-3 border border-red-200">';
-  html += '<p class="font-bold text-red-800">⚠️ 忌神（不太有利的）</p>';
+  html += '<div class="bg-[#f3e6e2] rounded-lg p-3 border border-[#d8b6ac]">';
+  html += '<p class="font-bold text-[#8a6d2f]">⚠️ 忌神（不太有利的）</p>';
   html += '<p class="text-sm">' + ys.jiShen.join('、') + '</p>';
   html += '<p class="text-xs text-gray-500 mt-1">' + ys.jiShenDesc + '</p>';
   html += '</div>';
@@ -2029,15 +2063,15 @@ function renderBaziResult(r) {
   var ysg = r.yongShenGuide;
   if (ysg && ysg.length > 0) {
     html += '<div class="result-card">';
-    html += '<h3 class="text-lg font-bold text-red-800 mb-3">💡 用神实用建议（生活指引）</h3>';
+    html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">💡 用神实用建议（生活指引）</h3>';
     html += '<p class="text-xs text-gray-500 mb-3">根据你的用神五行，以下是在日常生活中的实用建议，帮助你在合适的方向上发挥优势。</p>';
 
     html += '<div class="space-y-3">';
     for (var gi = 0; gi < ysg.length; gi++) {
       var g = ysg[gi];
       var emoji = { '金': '⚔️', '木': '🌳', '水': '💧', '火': '🔥', '土': '⛰️' };
-      html += '<div class="bg-amber-50 rounded-lg p-3 border border-amber-200">';
-      html += '<p class="font-bold text-amber-900 mb-1">' + (emoji[g.element] || '') + ' 喜「' + g.element + '」建议</p>';
+      html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d]">';
+      html += '<p class="font-bold text-[#8a6d2f] mb-1">' + (emoji[g.element] || '') + ' 喜「' + g.element + '」建议</p>';
       html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">';
       html += '<div class="text-gray-700"><span class="text-gray-500">🎨 幸运颜色：</span>' + g.color + '</div>';
       html += '<div class="text-gray-700"><span class="text-gray-500">🧭 有利方位：</span>' + g.direction + '</div>';
@@ -2053,7 +2087,7 @@ function renderBaziResult(r) {
   // ===== 卡片4：性格概述 =====
   var pers = r.personality;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">🧠 性格概述</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🧠 性格概述</h3>';
   html += '<p class="text-sm text-gray-700 leading-relaxed">' + pers.summary + '</p>';
   html += '<p class="text-sm text-gray-600 mt-2 leading-relaxed">' + pers.strengthNote + '</p>';
   html += '<p class="text-xs text-gray-400 mt-2">💡 以上性格分析基于八字日主五行和旺衰，仅供参考。</p>';
@@ -2062,17 +2096,17 @@ function renderBaziResult(r) {
   // ===== 卡片4.5：婚姻感情分析 =====
   var mar = r.marriage;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">💕 婚姻感情分析</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">💕 婚姻感情分析</h3>';
 
   // --- 配偶宫 ---
-  html += '<div class="bg-pink-50 rounded-lg p-3 border border-pink-200 mb-3">';
-  html += '<p class="font-bold text-pink-800 text-sm mb-1">🏠 配偶宫（日支）：' + mar.spousePalace + '（' + mar.spousePalaceElement + '）</p>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-3 border border-[#d8c8a8] mb-3">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">🏠 配偶宫（日支）：' + mar.spousePalace + '（' + mar.spousePalaceElement + '）</p>';
   html += '<p class="text-sm text-gray-700">' + mar.spousePalaceDesc + '</p>';
   html += '</div>';
 
   // --- 配偶星 ---
-  html += '<div class="bg-blue-50 rounded-lg p-3 border border-blue-200 mb-3">';
-  html += '<p class="font-bold text-blue-800 text-sm mb-1">👤 ' + mar.spouseStarLabel + '（'
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-3 border border-[#d8c8a8] mb-3">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">👤 ' + mar.spouseStarLabel + '（'
     + (mar.spouseStarNames.length > 1 ? mar.spouseStarNames.join('、') : mar.spouseStarNames[0]) + '）</p>';
   if (mar.spouseStarPositions.length > 0) {
     html += '<p class="text-sm text-gray-700">配偶星出现位置：' + mar.spouseStarPositions.join('；') + '</p>';
@@ -2081,8 +2115,8 @@ function renderBaziResult(r) {
   html += '</div>';
 
   // --- 日柱婚姻特性 ---
-  html += '<div class="bg-purple-50 rounded-lg p-3 border border-purple-200 mb-3">';
-  html += '<p class="font-bold text-purple-800 text-sm mb-1">📖 日柱婚姻特性</p>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-3 border border-[#d8c8a8] mb-3">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">📖 日柱婚姻特性</p>';
   html += '<p class="text-sm text-gray-700">' + mar.dayMasterMarriage + '</p>';
   if (mar.dayBranchMarriage) {
     html += '<p class="text-sm text-gray-600 mt-1">' + mar.dayBranchMarriage + '</p>';
@@ -2092,18 +2126,18 @@ function renderBaziResult(r) {
   // --- 婚姻相关神煞 ---
   if (mar.marriageStars.length > 0) {
     html += '<div class="mb-3">';
-    html += '<p class="font-bold text-red-800 text-sm mb-2">⭐ 婚姻相关神煞：</p>';
+    html += '<p class="font-bold text-[#8a6d2f] text-sm mb-2">⭐ 婚姻相关神煞：</p>';
     html += '<div class="flex flex-wrap gap-2">';
     for (var mi = 0; mi < mar.marriageStars.length; mi++) {
       var ms = mar.marriageStars[mi];
-      html += '<span class="inline-block ' + (ms.isGood ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-700') + ' rounded-full px-3 py-1 text-sm">' + ms.name + '（在' + ms.pillar + '）</span>';
+      html += '<span class="inline-block ' + (ms.isGood ? 'bg-[#eef3e7] text-[#5b7a52]' : 'bg-[#f3e6e2] text-[#a63a2e]') + ' rounded-full px-3 py-1 text-sm">' + ms.name + '（在' + ms.pillar + '）</span>';
     }
     html += '</div></div>';
   }
 
   // --- 综合解读 ---
-  html += '<div class="bg-amber-50 rounded-lg p-3 border border-amber-200">';
-  html += '<p class="font-bold text-amber-900 text-sm mb-1">📖 综合解读：</p>';
+  html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d]">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">📖 综合解读：</p>';
   html += '<p class="text-sm text-gray-700 leading-relaxed">' + mar.summary + '</p>';
   html += '</div>';
 
@@ -2113,18 +2147,18 @@ function renderBaziResult(r) {
   // ===== 卡片4.6：财运分析 =====
   var wea = r.wealth;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">💰 财运分析</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">💰 财运分析</h3>';
 
   // 财星总览
-  html += '<div class="bg-yellow-50 rounded-lg p-3 border border-yellow-200 mb-3">';
-  html += '<p class="font-bold text-yellow-800 text-sm mb-1">💵 财星力量：<strong>' + wea.wealthStrength + '</strong></p>';
+  html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d] mb-3">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">💵 财星力量：<strong>' + wea.wealthStrength + '</strong></p>';
   html += '<p class="text-sm text-gray-700">' + wea.wealthDesc + '</p>';
   html += '</div>';
 
   // 财星位置
   if (wea.wealthPositions.length > 0) {
-    html += '<div class="bg-green-50 rounded-lg p-3 border border-green-200 mb-3">';
-    html += '<p class="font-bold text-green-800 text-sm mb-1">📍 财星出现位置：</p>';
+    html += '<div class="bg-[#eef3e7] rounded-lg p-3 border border-[#b9c8aa] mb-3">';
+    html += '<p class="font-bold text-[#5b7a52] text-sm mb-1">📍 财星出现位置：</p>';
     for (var wi = 0; wi < wea.wealthPositions.length; wi++) {
       var wp = wea.wealthPositions[wi];
       html += '<p class="text-sm text-gray-700">' + wp.star + ' → ' + wp.position + wp.location + '（' + wp.gan + '）</p>';
@@ -2134,26 +2168,26 @@ function renderBaziResult(r) {
   }
 
   // 食伤生财
-  html += '<div class="bg-blue-50 rounded-lg p-3 border border-blue-200 mb-3">';
-  html += '<p class="font-bold text-blue-800 text-sm mb-1">🔑 财富创造力（食伤生财）：</p>';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-3 border border-[#d8c8a8] mb-3">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">🔑 财富创造力（食伤生财）：</p>';
   html += '<p class="text-sm text-gray-700">' + wea.foodDesc + '</p>';
   html += '</div>';
 
   // 财运好的大运
   if (wea.goodWealthYears.length > 0) {
     html += '<div class="mb-3">';
-    html += '<p class="font-bold text-red-800 text-sm mb-2">📈 财运较好的大运阶段：</p>';
+    html += '<p class="font-bold text-[#8a6d2f] text-sm mb-2">📈 财运较好的大运阶段：</p>';
     html += '<div class="flex flex-wrap gap-2">';
     for (var wi = 0; wi < wea.goodWealthYears.length; wi++) {
       var gwy = wea.goodWealthYears[wi];
-      html += '<span class="inline-block bg-green-50 text-green-800 rounded-full px-3 py-1 text-xs">' + gwy.age + '（' + gwy.ganZhi + ' → ' + gwy.shiShen + '运）</span>';
+      html += '<span class="inline-block bg-[#eef3e7] text-[#5b7a52] rounded-full px-3 py-1 text-xs">' + gwy.age + '（' + gwy.ganZhi + ' → ' + gwy.shiShen + '运）</span>';
     }
     html += '</div></div>';
   }
 
   // 综合解读
-  html += '<div class="bg-amber-50 rounded-lg p-3 border border-amber-200">';
-  html += '<p class="font-bold text-amber-900 text-sm mb-1">📖 综合解读：</p>';
+  html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d]">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">📖 综合解读：</p>';
   html += '<p class="text-sm text-gray-700 leading-relaxed">' + wea.summary + '</p>';
   html += '</div>';
 
@@ -2163,12 +2197,12 @@ function renderBaziResult(r) {
   // ===== 卡片4.7：健康分析 =====
   var hea = r.health;
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">🏥 健康分析（五行与五脏）</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🏥 健康分析（五行与五脏）</h3>';
 
   html += '<p class="text-xs text-gray-500 mb-3">中医认为五行对应五脏：木=肝胆、火=心、土=脾胃、金=肺、水=肾。五行失衡会影响对应器官。</p>';
 
   // 日主健康总评
-  html += '<div class="bg-blue-50 rounded-lg p-3 border border-blue-200 mb-3">';
+  html += '<div class="bg-[#f4ecd9] rounded-lg p-3 border border-[#d8c8a8] mb-3">';
   html += '<p class="text-sm text-gray-700">' + hea.dayHealth + '</p>';
   html += '</div>';
 
@@ -2176,15 +2210,15 @@ function renderBaziResult(r) {
   html += '<div class="space-y-2 mb-3">';
   for (var hi = 0; hi < hea.healthItems.length; hi++) {
     var hiItem = hea.healthItems[hi];
-    var alertClass = hiItem.attention ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white';
+    var alertClass = hiItem.attention ? 'border-[#d8b6ac] bg-[#f3e6e2]' : 'border-[#d8c8a8] bg-[#faf5e8]';
     html += '<div class="rounded-lg p-2 border ' + alertClass + '">';
     html += '<div class="flex items-center justify-between">';
     html += '<span class="text-sm font-bold">' + hiItem.emoji + ' ' + hiItem.element + '（' + hiItem.count + '个）→ ' + hiItem.organ + '</span>';
-    html += '<span class="text-xs font-bold ' + (hiItem.attention ? 'text-red-600' : 'text-green-600') + '">' + hiItem.status + '</span>';
+    html += '<span class="text-xs font-bold ' + (hiItem.attention ? 'text-[#a63a2e]' : 'text-[#5b7a52]') + '">' + hiItem.status + '</span>';
     html += '</div>';
     if (hiItem.attention) {
       html += '<p class="text-xs text-gray-600 mt-1">' + hiItem.symptoms + '</p>';
-      html += '<p class="text-xs text-green-700 mt-1">💡 ' + hiItem.advice + '</p>';
+      html += '<p class="text-xs text-[#5b7a52] mt-1">💡 ' + hiItem.advice + '</p>';
     }
     html += '</div>';
   }
@@ -2192,8 +2226,8 @@ function renderBaziResult(r) {
 
   // 重点关注
   if (hea.warnings.length > 0) {
-    html += '<div class="bg-red-50 rounded-lg p-3 border border-red-200 mb-3">';
-    html += '<p class="font-bold text-red-800 text-sm mb-1">⚠️ 需要特别关注的方面：</p>';
+    html += '<div class="bg-[#f3e6e2] rounded-lg p-3 border border-[#d8b6ac] mb-3">';
+    html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">⚠️ 需要特别关注的方面：</p>';
     for (var hi2 = 0; hi2 < hea.warnings.length; hi2++) {
       var warn = hea.warnings[hi2];
       html += '<p class="text-sm text-gray-700">' + warn.emoji + ' ' + warn.organ + ' — ' + warn.advice + '</p>';
@@ -2202,8 +2236,8 @@ function renderBaziResult(r) {
   }
 
   // 综合解读
-  html += '<div class="bg-amber-50 rounded-lg p-3 border border-amber-200">';
-  html += '<p class="font-bold text-amber-900 text-sm mb-1">📖 综合解读：</p>';
+  html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d]">';
+  html += '<p class="font-bold text-[#8a6d2f] text-sm mb-1">📖 综合解读：</p>';
   html += '<p class="text-sm text-gray-700 leading-relaxed">' + hea.summary + '</p>';
   html += '</div>';
 
@@ -2212,9 +2246,9 @@ function renderBaziResult(r) {
 
   // ===== 卡片5：大运排盘（增强版 — 含十神标签和简短解读） =====
   html += '<div class="result-card">';
-  html += '<h3 class="text-lg font-bold text-red-800 mb-3">📅 大运排盘（一生运势时间线）</h3>';
+  html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">📅 大运排盘（一生运势时间线）</h3>';
   html += '<p class="text-sm text-gray-600 mb-1">起运年龄：<strong>' + r.yunStartYear + '岁' + r.yunStartMonth + '个月</strong>（' + r.yunStartDate + ' 开始走大运）</p>';
-  html += '<p class="text-xs text-gray-400 mb-3">💡 每步大运管十年，下面的标签告诉你这十年的主题。标<span class="text-green-600 font-bold">绿色</span>的是有利的大运，标<span class="text-red-500 font-bold">红色</span>的需要多加努力。</p>';
+  html += '<p class="text-xs text-gray-400 mb-3">💡 每步大运管十年，下面的标签告诉你这十年的主题。标<span class="text-[#5b7a52] font-bold">绿色</span>的是有利的大运，标<span class="text-[#a63a2e] font-bold">红色</span>的需要多加努力。</p>';
 
   // 大运列表用横排时间线展示
   html += '<div class="overflow-x-auto">';
@@ -2230,16 +2264,16 @@ function renderBaziResult(r) {
     var isBadYun = (dyShiShen === '七杀' || dyShiShen === '劫财' || dyShiShen === '伤官');
     var isCurrent = (currentYear >= dy.startYear && currentYear <= dy.endYear);
 
-    var borderClass = isCurrent ? 'border-red-400 ring-2 ring-red-300' : 'border-amber-200';
-    var bgClass = isCurrent ? 'bg-red-50' : (isGoodYun ? 'bg-green-50' : (isBadYun ? 'bg-red-50' : 'bg-amber-50'));
+    var borderClass = isCurrent ? 'border-[#b8913d] ring-2 ring-[#b8913d]' : 'border-[#d8c8a8]';
+    var bgClass = isCurrent ? 'bg-[#f3e6e2]' : (isGoodYun ? 'bg-[#eef3e7]' : (isBadYun ? 'bg-[#f3e6e2]' : 'bg-[#f4ecd9]'));
 
     html += '<div class="' + bgClass + ' rounded-lg p-3 text-center border ' + borderClass + ' min-w-[100px] flex-shrink-0">';
     if (isCurrent) {
-      html += '<p class="text-xs text-red-500 font-bold">📍 当前</p>';
+      html += '<p class="text-xs text-[#a63a2e] font-bold">📍 当前</p>';
     }
     html += '<p class="text-xs text-gray-500">' + dy.startAge + '~' + dy.endAge + '岁</p>';
-    html += '<p class="text-lg font-bold text-red-800">' + dy.ganZhi + '</p>';
-    html += '<p class="text-xs font-bold ' + (isGoodYun ? 'text-green-600' : (isBadYun ? 'text-red-500' : 'text-gray-500')) + '">' + dyShiShen + '运</p>';
+    html += '<p class="text-lg font-bold text-[#8a6d2f]">' + dy.ganZhi + '</p>';
+    html += '<p class="text-xs font-bold ' + (isGoodYun ? 'text-[#5b7a52]' : (isBadYun ? 'text-[#a63a2e]' : 'text-gray-500')) + '">' + dyShiShen + '运</p>';
     html += '<p class="text-xs text-gray-400">' + dy.startYear + '-' + dy.endYear + '</p>';
     html += '</div>';
   }
@@ -2248,7 +2282,7 @@ function renderBaziResult(r) {
 
   // 大运十神图例说明
   html += '<details class="mt-3 text-xs">';
-  html += '<summary class="text-red-800 cursor-pointer font-bold">📚 各十神大运代表什么？（点击展开）</summary>';
+  html += '<summary class="text-[#8a6d2f] cursor-pointer font-bold">📚 各十神大运代表什么？（点击展开）</summary>';
   html += '<div class="grid grid-cols-2 md:grid-cols-5 gap-1 mt-2">';
   var yunLegend = [
     { name: '比肩运', desc: '朋友助力、独立自主' },
@@ -2264,7 +2298,7 @@ function renderBaziResult(r) {
   ];
   for (var yl = 0; yl < yunLegend.length; yl++) {
     var ylItem = yunLegend[yl];
-    html += '<div class="bg-gray-50 rounded p-1"><span class="font-bold">' + ylItem.name + '</span><br><span class="text-gray-500">' + ylItem.desc + '</span></div>';
+    html += '<div class="bg-[#f7f2e7] rounded p-1"><span class="font-bold">' + ylItem.name + '</span><br><span class="text-gray-500">' + ylItem.desc + '</span></div>';
   }
   html += '</div>';
   html += '</details>';
@@ -2275,30 +2309,30 @@ function renderBaziResult(r) {
   if (r.currentReading.found) {
     var cr = r.currentReading;
     html += '<div class="result-card">';
-    html += '<h3 class="text-lg font-bold text-red-800 mb-3">🔮 当前运势参考（' + cr.currentYear + '年）</h3>';
+    html += '<h3 class="text-lg font-bold text-[#8a6d2f] mb-3">🔮 当前运势参考（' + cr.currentYear + '年）</h3>';
     html += '<div class="grid grid-cols-2 gap-3 mb-4">';
-    html += '<div class="bg-blue-50 rounded-lg p-3 text-center border border-blue-200">';
+    html += '<div class="bg-[#f4ecd9] rounded-lg p-3 text-center border border-[#d8c8a8]">';
     html += '<p class="text-xs text-gray-500">当前大运</p>';
-    html += '<p class="text-xl font-bold text-blue-800">' + cr.daYunGanZhi + '</p>';
+    html += '<p class="text-xl font-bold text-[#8a6d2f]">' + cr.daYunGanZhi + '</p>';
     html += '<p class="text-xs text-gray-400">' + cr.daYunAge + '</p>';
     if (cr.daYunShiShen) {
-      html += '<p class="text-sm text-blue-700 font-bold mt-1">' + cr.daYunShiShen + '运</p>';
+      html += '<p class="text-sm text-[#8a6d2f] font-bold mt-1">' + cr.daYunShiShen + '运</p>';
     }
     html += '</div>';
-    html += '<div class="bg-red-50 rounded-lg p-3 text-center border border-red-200">';
+    html += '<div class="bg-[#f3e6e2] rounded-lg p-3 text-center border border-[#d8b6ac]">';
     html += '<p class="text-xs text-gray-500">今年流年</p>';
-    html += '<p class="text-xl font-bold text-red-800">' + cr.liuNianGanZhi + '</p>';
+    html += '<p class="text-xl font-bold text-[#8a6d2f]">' + cr.liuNianGanZhi + '</p>';
     html += '<p class="text-xs text-gray-400">' + cr.liuNianAge + '岁</p>';
     if (cr.liuNianShiShen) {
-      html += '<p class="text-sm text-red-700 font-bold mt-1">' + cr.liuNianShiShen + '年</p>';
+      html += '<p class="text-sm text-[#a63a2e] font-bold mt-1">' + cr.liuNianShiShen + '年</p>';
     }
     html += '</div>';
     html += '</div>';
 
     // 白话综合解读
     if (cr.combinedDesc) {
-      html += '<div class="bg-amber-50 rounded-lg p-3 border border-amber-200">';
-      html += '<p class="text-sm font-bold text-amber-900 mb-1">📖 综合白话解读：</p>';
+      html += '<div class="bg-[#efe5cf] rounded-lg p-3 border border-[#b8913d]">';
+      html += '<p class="text-sm font-bold text-[#8a6d2f] mb-1">📖 综合白话解读：</p>';
       html += '<p class="text-sm text-gray-700 leading-relaxed">' + cr.combinedDesc + '</p>';
       html += '</div>';
     }
@@ -2317,19 +2351,19 @@ function renderBaziResult(r) {
 
   // ===== 底部复制按钮 =====
   html += '<div class="text-center mt-6">';
-  html += '<button onclick="copyBaziResult()" class="text-sm px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition-colors border border-amber-300" title="把排盘结果复制到剪贴板">📋 一键复制排盘结果</button>';
+  html += '<button onclick="copyBaziResult()" class="text-sm px-4 py-2 bg-[#e6d6ae] hover:bg-[#d8c8a8] text-[#8a6d2f] rounded-lg transition-colors border border-[#b8913d]" title="把排盘结果复制到剪贴板">📋 一键复制排盘结果</button>';
   html += '</div>';
 
   // ===== 十二长生小贴士 =====
   html += '<div class="result-card mt-4">';
   html += '<details class="text-sm">';
-  html += '<summary class="font-bold text-red-800 cursor-pointer">📚 十二长生含义速查（点击展开）</summary>';
+  html += '<summary class="font-bold text-[#8a6d2f] cursor-pointer">📚 十二长生含义速查（点击展开）</summary>';
   html += '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 text-xs">';
   var csKeys = ['长生', '沐浴', '冠带', '临官', '帝旺', '衰', '病', '死', '墓', '绝', '胎', '养'];
   for (var ki = 0; ki < csKeys.length; ki++) {
     var key = csKeys[ki];
-    html += '<div class="bg-amber-50 rounded-lg p-2">';
-    html += '<span class="font-bold text-red-800">' + key + '</span>';
+    html += '<div class="bg-[#f4ecd9] rounded-lg p-2">';
+    html += '<span class="font-bold text-[#8a6d2f]">' + key + '</span>';
     html += '<br><span class="text-gray-500">' + (CHANG_SHENG_SHORT[key] || '') + '</span>';
     html += '</div>';
   }
@@ -2341,9 +2375,9 @@ function renderBaziResult(r) {
   // 用户看完八字结果后，点击这里可以打开 AI 聊天窗口提问
   html += '<div class="text-center mt-4 mb-4" id="qa-entry-section">';
   html += '<button onclick="openQAModal(window.__currentBaziResult)" ';
-  html += 'class="px-6 py-3 bg-gradient-to-r from-red-800 to-amber-600 text-white rounded-xl font-bold text-lg ';
-  html += 'hover:from-red-700 hover:to-amber-500 transition-all shadow-lg transform hover:scale-105 ';
-  html += 'focus:outline-none focus:ring-2 focus:ring-amber-400">';
+  html += 'class="px-6 py-3 bg-gradient-to-r from-[#1c1917] to-[#8a6d2f] text-[#f4ecd9] rounded-xl font-bold text-lg ';
+  html += 'hover:from-[#292524] hover:to-[#b8913d] transition-all shadow-lg transform hover:scale-105 ';
+  html += 'focus:outline-none focus:ring-2 focus:ring-[#b8913d]">';
   html += '🤖 AI 智能问答 — 问我任何关于你八字的问题';
   html += '</button>';
   html += '<p class="text-xs text-gray-400 mt-2">基于 DeepSeek AI，根据你的八字实时生成个性化回答</p>';

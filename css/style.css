@@ -1,9 +1,36 @@
-/* ========== 全局自定义样式 ========== */
+/* ========== 全局自定义样式 —— 古风水墨风主题 ==========
+   配色体系：墨色（近黑褐）+ 金色 + 宣纸底 + 朱砂红点缀
+   字体：标题用楷体、正文用宋体，营造古书质感
+*/
 
-/* ===== 基础字体设置 ===== */
-/* 使用中文友好字体：优先系统自带中文字体 */
+/* 主题色变量（方便统一调整） */
+:root {
+  --ink-900: #1c1917;      /* 墨黑（最深，用于顶栏/页脚） */
+  --ink-800: #292524;      /* 墨黑 */
+  --ink-700: #44403c;      /* 墨灰 */
+  --ink-600: #57534e;      /* 墨灰（浅，用于次要文字） */
+  --gold: #b8913d;         /* 主金色 */
+  --gold-light: #c9a45c;   /* 亮金 */
+  --gold-pale: #e6d6ae;    /* 淡金（深底上的文字） */
+  --gold-dark: #8a6d2f;    /* 深金（标题/强调文字） */
+  --paper: #f4ecd9;        /* 宣纸底 */
+  --paper-light: #faf5e8;  /* 卡片纸底 */
+  --paper-dark: #efe5cf;   /* 深一点的纸 */
+  --cinnabar: #a63a2e;     /* 朱砂红（强调/警示/印章） */
+  --ink-line: #d8c8a8;     /* 墨线（浅边框） */
+  --ink-line-dark: #8b7355;/* 墨线（深边框） */
+}
+
+/* ===== 基础字体设置 =====
+   正文宋体、标题楷体，营造古书质感 */
 body {
-  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", "宋体", serif;
+  color: #3a3228;
+  line-height: 1.7;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "KaiTi", "STKaiti", "Kaiti SC", "楷体", "Songti SC", serif;
+  font-weight: 600;
 }
 
 /* ===== Tab 切换样式 ===== */
@@ -18,10 +45,11 @@ body {
   display: none;
 }
 
-/* 当前激活的Tab按钮样式（红色背景变亮 + 底部金色高亮条） */
+/* 当前激活的Tab按钮样式（墨色背景 + 底部金色高亮条） */
 .tab-btn.active {
-  background-color: #b91c1c; /* red-700 */
-  border-bottom: 3px solid #fbbf24; /* amber-400 */
+  background-color: var(--ink-700);
+  border-bottom: 3px solid var(--gold);
+  color: var(--gold-pale);
 }
 
 /* Tab按钮平滑过渡动画 */
@@ -38,41 +66,42 @@ body {
 }
 .bazi-table th,
 .bazi-table td {
-  border: 2px solid #d97706; /* amber-600 */
+  border: 2px solid var(--ink-line-dark);
   padding: 10px 8px;
   text-align: center;
   font-size: 1.1rem;
 }
 .bazi-table th {
-  background-color: #991b1b; /* red-800 */
-  color: #fef3c7; /* amber-100 */
+  background-color: var(--ink-800);
+  color: var(--gold-pale);
   font-weight: bold;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-family: "KaiTi", "STKaiti", "Kaiti SC", serif;
 }
 .bazi-table td {
-  background-color: #fffbeb; /* amber-50 */
-  color: #1a1a1a;
+  background-color: var(--paper-light);
+  color: #2b2320;
 }
 /* 表格行悬停效果 */
 .bazi-table tbody tr:hover td {
-  background-color: #fef3c7; /* amber-100 */
+  background-color: var(--paper-dark);
 }
 
 /* ===== 五行色块（用于五行统计等地方） ===== */
-.wuxing-metal { background-color: #f1f5f9; color: #334155; }
-.wuxing-wood { background-color: #dcfce7; color: #166534; }
-.wuxing-water { background-color: #dbeafe; color: #1e40af; }
-.wuxing-fire { background-color: #fee2e2; color: #991b1b; }
-.wuxing-earth { background-color: #fef3c7; color: #92400e; }
+.wuxing-metal { background-color: #eceae4; color: #44403c; }
+.wuxing-wood { background-color: #dfe8d3; color: #3f5c34; }
+.wuxing-water { background-color: #dce6e8; color: #33505a; }
+.wuxing-fire { background-color: #ecd9d5; color: #9c3427; }
+.wuxing-earth { background-color: #ece1c4; color: #8a6d2f; }
 
-/* ===== 结果卡片通用样式 ===== */
+/* ===== 结果卡片通用样式（宣纸底 + 金色描边） ===== */
 .result-card {
-  background-color: white;
-  border-radius: 12px;
+  background-color: var(--paper-light);
+  border-radius: 8px;
   padding: 20px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(28, 25, 23, 0.06);
+  border: 1px solid var(--ink-line);
   animation: fadeInUp 0.5s ease forwards;
 }
 
@@ -103,7 +132,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(20, 16, 12, 0.55);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -118,14 +147,15 @@ body {
 
 /* ===== 弹窗内容 ===== */
 .modal-content {
-  background-color: white;
-  border-radius: 16px;
+  background-color: var(--paper-light);
+  border-radius: 10px;
   padding: 24px;
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--ink-line-dark);
   position: relative;
   animation: scaleIn 0.25s ease;
 }
@@ -146,8 +176,8 @@ body {
   display: inline-block;
   width: 40px;
   height: 40px;
-  border: 4px solid #fde68a; /* amber-200 */
-  border-top: 4px solid #991b1b; /* red-800 */
+  border: 4px solid var(--ink-line);
+  border-top: 4px solid var(--gold);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -224,10 +254,10 @@ body {
 
 /* ===== 标题栏 ===== */
 .qa-header {
-  background: linear-gradient(135deg, #991b1b, #b91c1c);
-  color: #fef3c7;
+  background: linear-gradient(135deg, var(--ink-900), var(--ink-700));
+  color: var(--gold-pale);
   padding: 16px 20px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 10px 10px 0 0;
   position: relative;
   flex-shrink: 0;  /* 不被压缩 */
 }
@@ -235,12 +265,13 @@ body {
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0;
+  font-family: "KaiTi", "STKaiti", "Kaiti SC", serif;
 }
 .qa-subtitle {
   font-size: 0.8rem;
   margin: 4px 0 0;
   opacity: 0.85;
-  color: #fde68a;
+  color: var(--gold-light);
 }
 /* 关闭按钮 */
 .qa-close-btn {
@@ -249,7 +280,7 @@ body {
   right: 16px;
   background: none;
   border: none;
-  color: #fef3c7;
+  color: var(--gold-pale);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 4px 8px;
@@ -258,13 +289,13 @@ body {
   transition: background 0.2s;
 }
 .qa-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 /* ===== API Key 设置区 ===== */
 .qa-apikey-section {
-  background: #fef3c7;
-  border-bottom: 2px solid #fbbf24;
+  background: var(--paper-dark);
+  border-bottom: 2px solid var(--gold);
   padding: 14px 20px;
   flex-shrink: 0;
 }
@@ -273,18 +304,18 @@ body {
 }
 .qa-apikey-label {
   font-weight: bold;
-  color: #92400e;
+  color: var(--gold-dark);
   margin: 0 0 4px;
   font-size: 0.9rem;
 }
 .qa-apikey-hint {
   font-size: 0.78rem;
-  color: #78716c;
+  color: var(--ink-600);
   margin: 0 0 10px;
   line-height: 1.5;
 }
 .qa-link {
-  color: #991b1b;
+  color: var(--cinnabar);
   text-decoration: underline;
 }
 .qa-apikey-row {
@@ -294,19 +325,20 @@ body {
 }
 .qa-apikey-input {
   flex: 1;
-  border: 2px solid #fbbf24;
+  border: 2px solid var(--gold);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 0.85rem;
   outline: none;
   transition: border-color 0.2s;
+  background: var(--paper-light);
 }
 .qa-apikey-input:focus {
-  border-color: #991b1b;
+  border-color: var(--ink-800);
 }
 .qa-apikey-btn {
-  background: #991b1b;
-  color: #fef3c7;
+  background: var(--ink-800);
+  color: var(--gold-pale);
   border: none;
   border-radius: 8px;
   padding: 9px 16px;
@@ -317,10 +349,10 @@ body {
   transition: background 0.2s;
 }
 .qa-apikey-btn:hover {
-  background: #b91c1c;
+  background: var(--ink-700);
 }
 .qa-apikey-error {
-  color: #dc2626;
+  color: var(--cinnabar);
   font-size: 0.8rem;
   margin: 6px 0 0;
 }
@@ -328,12 +360,12 @@ body {
 /* ===== 推荐问题标签云 ===== */
 .qa-tags-section {
   padding: 12px 20px;
-  border-bottom: 1px solid #fde68a;
+  border-bottom: 1px solid var(--ink-line);
   flex-shrink: 0;
 }
 .qa-tags-label {
   font-size: 0.8rem;
-  color: #78716c;
+  color: var(--ink-600);
   margin: 0 0 8px;
 }
 .qa-tags-cloud {
@@ -344,23 +376,23 @@ body {
 /* 标签按钮 —— 圆角小胶囊 */
 .qa-tag {
   display: inline-block;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
+  background: var(--paper-light);
+  border: 1px solid var(--ink-line);
   border-radius: 20px;
   padding: 5px 12px;
   font-size: 0.78rem;
-  color: #92400e;
+  color: var(--gold-dark);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
   user-select: none;  /* 防止双击选中文字 */
 }
 .qa-tag:hover {
-  background: #fbbf24;
-  color: #7c2d12;
-  border-color: #f59e0b;
+  background: var(--gold);
+  color: #2b2320;
+  border-color: var(--gold-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
 
 /* ===== 对话消息区 ===== */
@@ -379,7 +411,7 @@ body {
   width: 5px;
 }
 .qa-chat-area::-webkit-scrollbar-thumb {
-  background: #d4d4d4;
+  background: var(--ink-line);
   border-radius: 10px;
 }
 .qa-chat-area::-webkit-scrollbar-track {
@@ -396,25 +428,25 @@ body {
   word-break: break-word;
   animation: qaBubbleIn 0.3s ease;
 }
-/* 用户气泡：红底白字，靠右 */
+/* 用户气泡：墨底金字，靠右 */
 .qa-bubble-user {
   align-self: flex-end;
-  background: #991b1b;
-  color: #fef3c7;
+  background: var(--ink-800);
+  color: var(--gold-pale);
   border-bottom-right-radius: 4px;
 }
-/* AI 气泡：琥珀底深色字，靠左 */
+/* AI 气泡：宣纸底墨色字，靠左 */
 .qa-bubble-bot {
   align-self: flex-start;
-  background: #fffbeb;
-  color: #1a1a1a;
-  border: 1px solid #fde68a;
+  background: var(--paper-light);
+  color: #2b2320;
+  border: 1px solid var(--ink-line);
   border-bottom-left-radius: 4px;
 }
 /* 欢迎气泡：稍微特别一点 */
 .qa-welcome {
-  background: #fef3c7;
-  border: 1px dashed #fbbf24;
+  background: var(--paper-dark);
+  border: 1px dashed var(--gold);
 }
 
 @keyframes qaBubbleIn {
@@ -439,13 +471,13 @@ body {
 }
 .qa-loading-text {
   font-size: 0.85rem;
-  color: #78716c;
+  color: var(--ink-600);
 }
 /* 三个跳动的小点 */
 .qa-loading-dots span {
   display: inline-block;
   font-size: 1.5rem;
-  color: #991b1b;
+  color: var(--gold);
   animation: qaDotBounce 1.4s infinite ease-in-out;
   line-height: 1;
 }
@@ -469,23 +501,23 @@ body {
   display: flex;
   gap: 8px;
   padding: 10px 20px 14px;
-  border-top: 1px solid #fde68a;
+  border-top: 1px solid var(--ink-line);
   align-items: center;
   flex-shrink: 0;
 }
 /* 输入框 */
 .qa-input {
   flex: 1;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--ink-line);
   border-radius: 24px;
   padding: 10px 16px;
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s;
-  background: #fafafa;
+  background: #fffdf6;
 }
 .qa-input:focus {
-  border-color: #991b1b;
+  border-color: var(--gold);
   background: white;
 }
 .qa-input:disabled {
@@ -495,8 +527,8 @@ body {
 }
 /* 发送按钮 */
 .qa-send-btn {
-  background: #991b1b;
-  color: #fef3c7;
+  background: var(--ink-800);
+  color: var(--gold-pale);
   border: none;
   border-radius: 24px;
   padding: 10px 20px;
@@ -508,11 +540,11 @@ body {
   flex-shrink: 0;
 }
 .qa-send-btn:hover {
-  background: #b91c1c;
+  background: var(--ink-700);
 }
 .qa-send-btn:disabled {
-  background: #d4d4d4;
-  color: #9ca3af;
+  background: var(--ink-line);
+  color: var(--ink-600);
   cursor: not-allowed;
 }
 
@@ -526,7 +558,7 @@ body {
 }
 .qa-footer-link {
   font-size: 0.75rem;
-  color: #991b1b;
+  color: var(--cinnabar);
   text-decoration: none;
   cursor: pointer;
 }
@@ -535,7 +567,7 @@ body {
 }
 .qa-footer-disclaimer {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--ink-600);
 }
 
 /* ===== 手机端适配 ===== */
@@ -610,44 +642,58 @@ body {
   }
 }
 
-/* ========== 页面美化 ========== */
+/* ==========================================
+   页面美化（古风水墨风）
+   ========================================== */
 
-/* 主体背景：柔和米色渐变，滚动时保持固定 */
+/* 主体背景：宣纸质感（暖米色渐变 + 淡淡晕染） */
 body.bg-amber-50 {
-  background: linear-gradient(180deg, #fefce8 0%, #fffbeb 45%, #fef3c7 100%);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(184, 145, 61, 0.07), transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(166, 58, 46, 0.05), transparent 55%);
   background-attachment: fixed;
 }
 
-/* 标题栏：红金渐变 + 阴影，提升质感 */
+/* 标题栏：墨黑渐变 + 金色描边，提升质感 */
 header.bg-red-900 {
-  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 45%, #b91c1c 100%);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  background: linear-gradient(135deg, #141210 0%, var(--ink-900) 45%, var(--ink-700) 100%);
+  border-bottom: 2px solid var(--gold);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
 }
 
-/* 导航栏：渐变 + 阴影 */
+/* 导航栏：墨黑渐变 + 阴影 */
 nav.bg-red-800 {
-  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Tab 激活态：亮红渐变 + 金色底边 */
+/* Tab 激活态：墨色 + 金色底边 */
 .tab-btn.active {
-  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-  border-bottom: 3px solid #fbbf24;
+  background: linear-gradient(180deg, var(--ink-700) 0%, var(--ink-800) 100%);
+  border-bottom: 3px solid var(--gold);
 }
 
-/* 结果卡片：更柔和阴影、更大圆角、hover 轻微上浮 */
+/* 结果卡片：宣纸底 + 更柔和阴影 + hover 轻微上浮 */
 .result-card {
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(28, 25, 23, 0.07);
+  border: 1px solid var(--ink-line);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 .result-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 22px rgba(28, 25, 23, 0.13);
   transform: translateY(-2px);
 }
 
-/* 排盘表头：深红渐变 */
+/* 排盘表头：墨色渐变 */
 .bazi-table th {
-  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  background: linear-gradient(180deg, var(--ink-800) 0%, var(--ink-900) 100%);
+  color: var(--gold-pale);
+}
+
+/* 页脚：墨黑 + 金色描边 */
+footer.bg-red-900 {
+  background: linear-gradient(135deg, #141210 0%, var(--ink-900) 100%);
+  border-top: 2px solid var(--gold);
 }
