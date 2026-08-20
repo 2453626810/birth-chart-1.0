@@ -1810,7 +1810,7 @@ function renderBaziResult(r) {
   html += '<div class="grid grid-cols-2 gap-2 text-sm">';
   html += '<div class="bg-[#f4ecd9] rounded-lg p-2 border border-[#d8c8a8] text-center">';
   html += '<p class="text-gray-500 text-xs">四柱八字</p>';
-  html += '<p class="font-bold">' + r.pillars + '</p>';
+  html += '<p class="font-bold">' + r.yearPillar + ' ' + r.monthPillar + ' ' + r.dayPillar + ' ' + r.timePillar + '</p>';
   html += '</div>';
   html += '<div class="bg-[#f4ecd9] rounded-lg p-2 border border-[#d8c8a8] text-center">';
   html += '<p class="text-gray-500 text-xs">五行' + (missing0.length ? '（缺 ' + missing0.join('、') + '）' : '齐全') + '</p>';
